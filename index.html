@@ -94,7 +94,7 @@
   body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.2s,color 0.2s; line-height:1.5; }
 
   header { display:flex; align-items:center; justify-content:space-between; padding:0.8em 1em; padding-top:calc(0.8em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:rgba(var(--surface-rgb,17,17,24),0.82); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); position:sticky; top:0; z-index:90; gap:10px; flex-wrap:nowrap; }
-  .logo { font-size:1.35em; font-weight:800; letter-spacing:-0.03em; white-space:nowrap; font-family:'Syne',sans-serif; }
+  .logo { font-size:1.1em; font-weight:800; letter-spacing:-0.02em; white-space:nowrap; font-family:'Syne',sans-serif; }
 
   .header-stats { display:flex; gap:1.4em; font-family:'Inter',sans-serif; font-size:0.78em; color:var(--muted); }
   .header-stats b { color:var(--accent); font-weight:600; }
@@ -161,7 +161,7 @@
   .page { display:none; }
   .page.active { display:block; }
   .page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:1.5em; gap:16px; }
-  .page-title { font-size:1.7em; font-weight:900; letter-spacing:-0.02em; font-family:'Nunito',sans-serif; }
+  .page-title { font-size:1.5em; font-weight:800; letter-spacing:-0.02em; font-family:'Syne',sans-serif; }
   .page-sub { color:var(--muted); font-size:0.85em; margin-top:4px; font-family:'Inter',sans-serif; }
 
   .filters { display:flex; gap:10px; margin-bottom:1.2em; flex-wrap:wrap; align-items:center; }
@@ -726,7 +726,7 @@
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="greeting-bar" id="greeting-bar"></div>
-      <div class="page-header">
+      <div class="page-header" style="padding-top:8px;">
         <div><div class="page-title">Dashboard</div><div class="page-sub">Your inventory at a glance</div></div>
       </div>
       <div id="dash-banner"></div>
@@ -1856,7 +1856,7 @@ function renderDashboard() {
       <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(var(--accent-rgb,181,123,255),0.12) 0%,transparent 70%);pointer-events:none;"></div>
       <div style="position:absolute;bottom:-20px;left:-10px;width:80px;height:80px;background:radial-gradient(circle,rgba(var(--success-rgb,68,255,136),0.06) 0%,transparent 70%);pointer-events:none;"></div>
       <div style="font-size:0.63em;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;color:var(--accent);margin-bottom:8px;opacity:0.8">All-Time Performance</div>
-      <div style="font-family:'Syne',sans-serif;font-size:2.6em;font-weight:800;line-height:1;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"><span data-countup>£${realProfit.toFixed(0)}</span></div>
+      <div style="font-family:'Syne',sans-serif;font-size:2.6em;font-weight:800;line-height:1;letter-spacing:-0.03em;color:var(--text);">£<span id="profit-countup" style="font-family:'Syne',sans-serif;">${realProfit.toFixed(0)}</span></div>
       <div style="font-size:0.7em;color:var(--muted);margin-top:4px;margin-bottom:14px;font-family:'DM Mono',monospace;">total profit earned</div>
       <div style="display:flex;gap:20px;flex-wrap:wrap;">
         <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Revenue</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--success)">£${revenue.toFixed(0)}</div></div>
@@ -1879,6 +1879,8 @@ function renderDashboard() {
     document.querySelectorAll('[data-countup-val]').forEach(el => {
       const target = parseFloat(el.dataset.countupVal)||0;
       const prefix = el.dataset.countupPrefix||'';
+      el.style.fontFamily = "'Syne',sans-serif";
+      el.style.fontWeight = '800';
       const start = Date.now();
       const tick = () => {
         const p = Math.min((Date.now()-start)/600,1);
@@ -1943,8 +1945,8 @@ function renderDashboard() {
 
   // Trigger count-up on visible numbers after render
   setTimeout(() => {
-    const profitEl = document.querySelector('#dash-banner [data-countup]');
-    if (profitEl) countUp(profitEl, realProfit, '£');
+    const profitEl = document.getElementById('profit-countup');
+    if (profitEl) { const t=realProfit; const s=Date.now(); const tick=()=>{const p=Math.min((Date.now()-s)/700,1);const e=1-Math.pow(1-p,3);profitEl.textContent=Math.round(t*e).toLocaleString();if(p<1)requestAnimationFrame(tick);}; requestAnimationFrame(tick); }
   }, 50);
 
   document.getElementById('dash-breakdowns').innerHTML = `
