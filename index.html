@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SamCreation">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>SamCreation — eBay Inventory</title>
@@ -220,7 +222,7 @@
   /* Greeting */
   .greeting-bar { padding:18px 16px 16px; text-align:center; }
   .greeting-time-lbl { font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); font-weight:600; margin-bottom:3px; }
-  .greeting-name { font-family:'Syne',sans-serif; font-size:1.5em; font-weight:800; letter-spacing:-0.02em; display:inline-block; animation:floatAnim 4s ease-in-out infinite; }
+  .greeting-name { font-family:'Syne',sans-serif; font-size:1.5em; font-weight:700; letter-spacing:-0.02em; display:inline-block; animation:floatAnim 4s ease-in-out infinite; }
 
   /* Action sheet */
   .action-sheet-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; align-items:flex-end; justify-content:center; }
@@ -1283,7 +1285,7 @@ function renderMobileCards(items) {
         ${photoHtml}
         <div style="flex:1;min-width:0;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px;">
-            <div class="m-card-name" style="font-family:'Syne',sans-serif;font-size:1em;font-weight:800;">${esc(item.name||'Unnamed')}</div>
+            <div class="m-card-name" style="font-family:'Syne',sans-serif;font-size:1em;font-weight:700;">${esc(item.name||'Unnamed')}</div>
             ${statusTag(item.status)}
           </div>
           ${item.sku?`<div class="m-card-sku">${esc(item.sku)}</div>`:''}
@@ -1853,12 +1855,12 @@ function renderDashboard() {
       <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(var(--accent-rgb,181,123,255),0.12) 0%,transparent 70%);pointer-events:none;"></div>
       <div style="position:absolute;bottom:-20px;left:-10px;width:80px;height:80px;background:radial-gradient(circle,rgba(var(--success-rgb,68,255,136),0.06) 0%,transparent 70%);pointer-events:none;"></div>
       <div style="font-size:0.63em;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;color:var(--accent);margin-bottom:8px;opacity:0.8">All-Time Performance</div>
-      <div style="font-family:'Syne',sans-serif;font-size:2.4em;font-weight:800;line-height:1;letter-spacing:-0.03em;color:var(--text);">£<span id="profit-countup" style="font-family:inherit;">${realProfit.toFixed(0)}</span></div>
+      <div style="font-family:'Syne',sans-serif;font-size:2.4em;font-weight:800;line-height:1;letter-spacing:-0.03em;color:var(--text);"><span id="profit-countup">£${realProfit.toFixed(0)}</span></div>
       <div style="font-size:0.7em;color:var(--muted);margin-top:4px;margin-bottom:14px;font-family:'DM Mono',monospace;">total profit earned</div>
       <div style="display:flex;gap:20px;flex-wrap:wrap;">
-        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Revenue</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--success)">£${revenue.toFixed(0)}</div></div>
-        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Cost</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2)">£${allCost.toFixed(0)}</div></div>
-        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Margin</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--accent)">${margin}%</div></div>
+        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Revenue</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--success)">£${revenue.toFixed(0)}</div></div>
+        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Cost</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--accent2)">£${allCost.toFixed(0)}</div></div>
+        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Margin</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--accent)">${margin}%</div></div>
       </div>
     </div>`;
 
@@ -1867,7 +1869,7 @@ function renderDashboard() {
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${barCol},transparent)"></div>
       <div style="font-size:0.62em;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;color:var(--muted);margin-bottom:10px;margin-top:6px">${lbl}</div>
-      <div style="font-family:'Syne',sans-serif;font-size:1.75em;font-weight:800;line-height:1;color:${valCol};letter-spacing:-0.02em;font-display:block;">${val}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:1.8em;font-weight:700;line-height:1;color:${valCol};letter-spacing:-0.01em;">${val}</div>
       <div style="display:inline-block;font-size:0.6em;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:8px;font-family:'DM Mono',monospace;background:var(--surface2);color:${badgeCol}">${badge}</div>
     </div>`;
 
@@ -1895,10 +1897,10 @@ function renderDashboard() {
   }
 
   document.getElementById('dash-tiles').innerHTML =
-    tile('var(--accent)',  'Active Stock', `<span data-countup-val="${active.length}" style="font-family:'Syne',sans-serif;font-weight:800;">0</span>`,    'var(--accent)',  listedNow+' listed',       'var(--accent)') +
-    tile('var(--success)', 'Stock Value',  `<span data-countup-val="${curListVal.toFixed(0)}" data-countup-prefix="£" style="font-family:'Syne',sans-serif;font-weight:800;">£0</span>`, 'var(--success)', 'at list price', 'var(--success)') +
-    tile('var(--sold)',    'Items Sold',   `<span data-countup-val="${sold.length}" style="font-family:'Syne',sans-serif;font-weight:800;">0</span>`,      'var(--sold)',    'all time',                'var(--sold)') +
-    tile('var(--danger)',  'Low Stock',    `<span data-countup-val="${lowStock.length}" style="font-family:'Syne',sans-serif;font-weight:800;">0</span>`,  'var(--danger)',  'needs restock',           'var(--danger)');
+    tile('var(--accent)',  'Active Stock', active.length,    'var(--accent)',  listedNow+' listed',       'var(--accent)') +
+    tile('var(--success)', 'Stock Value',  '£'+curListVal.toFixed(0), 'var(--success)', 'at list price', 'var(--success)') +
+    tile('var(--sold)',    'Items Sold',   sold.length,      'var(--sold)',    'all time',                'var(--sold)') +
+    tile('var(--danger)',  'Low Stock',    lowStock.length,  'var(--danger)',  'needs restock',           'var(--danger)');
 
   // ── TOP STOCK LIST ──
   const topItems = [...active].sort((a,b)=>(parseFloat(b.price)||0)-(parseFloat(a.price)||0)).slice(0,5);
