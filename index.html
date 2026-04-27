@@ -569,6 +569,7 @@
     <div class="nav-item" onclick="exportJSON()"><span class="icon">⬇</span> <span class="nav-label">Backup JSON</span></div>
     <div class="nav-item" onclick="openExistingFile()"><span class="icon">⬆</span> <span class="nav-label">Restore Backup</span></div>
     <div class="nav-item" onclick="exportCSV()"><span class="icon">📋</span> <span class="nav-label">Export CSV</span></div>
+    <div class="nav-item" onclick="triggerImport()"><span class="icon">📂</span> <span class="nav-label">Import CSV</span></div>
     <div class="nav-item" onclick="clearAllData()" style="color:var(--danger)">
       <span class="icon">🗑</span> <span class="nav-label">Clear All Data</span>
     </div>
@@ -659,11 +660,11 @@
       <div class="form-group full"><label>Internal Notes</label><textarea id="f-notes" placeholder="Private notes..."></textarea></div>
       <div class="form-group full">
         <label>Photos</label>
-        <label for="f-photos-input" style="display:block;border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.15s;margin-bottom:4px;">
+        <div onclick="document.getElementById('f-photos-input').click()" style="display:block;border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.15s;margin-bottom:4px;">
           <span style="font-size:1.8em;display:block;margin-bottom:4px">📷</span>
           <span style="color:var(--muted);font-size:0.8em">Tap to add photos (camera or gallery)</span>
-        </label>
-        <input type="file" id="f-photos-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
+        </div>
+        <input type="file" id="f-photos-input" accept="image/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;">
         <div class="photo-preview-grid" id="photo-preview-grid"></div>
       </div>
     </div>
@@ -1203,8 +1204,9 @@ function openAddModal() { editingId=null; document.getElementById('modal-title')
 let currentPhotos = []; // base64 strings for current edit session
 
 function handlePhotoUpload(event) {
-  const files = Array.from(event.target.files);
-  if (!files.length) return;
+  const files = Array.from(event.target.files || []);
+  if (!files.length) { showToast('No photo selected','error'); return; }
+  showToast(`Loading ${files.length} photo${files.length>1?'s':''}...`);
   let loaded = 0;
   files.forEach(file => {
     const reader = new FileReader();
@@ -1213,16 +1215,25 @@ function handlePhotoUpload(event) {
         currentPhotos.push(b64);
         loaded++;
         renderPhotoPreview();
-        // Only clear after ALL files are done
         if (loaded === files.length) {
-          try { event.target.value = ''; } catch(e) {}
+          showToast(`${loaded} photo${loaded>1?'s':''} added ✓`);
+          try { event.target.value = ''; } catch(err) {}
         }
       });
     };
-    reader.onerror = () => { loaded++; };
+    reader.onerror = () => {
+      loaded++;
+      showToast('Could not read photo','error');
+    };
     reader.readAsDataURL(file);
   });
 }
+
+// Attach photo input listener after DOM ready — more reliable than inline onchange on Android
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('f-photos-input');
+  if (inp) inp.addEventListener('change', handlePhotoUpload);
+});
 
 function resizeImage(dataUrl, maxSize, callback) {
   const img = new Image();
