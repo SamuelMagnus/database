@@ -771,11 +771,16 @@ async function idbSet(key, val) {
 }
 
 async function loadInventory() {
-  const saved = await idbGet('inventory');
-  inventory = saved || [];
-  setSaveState('saved');
-  if (inventory.length) showToast(`${inventory.length} items loaded ✓`);
-  else showToast('Ready — tap ＋ to add your first item', '');
+  try {
+    const saved = await idbGet('inventory');
+    inventory = saved || [];
+    setSaveState('saved');
+    if (inventory.length) showToast(`${inventory.length} items loaded ✓`);
+    else showToast('Ready — tap ＋ to add your first item', '');
+  } catch(e) {
+    inventory = [];
+    setSaveState('unsaved');
+  }
 }
 
 async function saveToFile() {
@@ -1456,16 +1461,33 @@ if (screen.orientation && screen.orientation.lock) {
 }
 
 (async()=>{
-  // Lock to portrait when running as installed PWA
+  const hideLoader = () => {
+    const el = document.getElementById('loading-screen');
+    if (el) el.style.display = 'none';
+  };
+
+  // Safety net — if anything hangs, force-hide after 3 seconds
+  setTimeout(hideLoader, 3000);
+
   try {
+    // Portrait lock — ignore errors
     if (screen.orientation && screen.orientation.lock) {
-      await screen.orientation.lock('portrait');
+      screen.orientation.lock('portrait').catch(()=>{});
     }
   } catch(e) {}
-  loadPrefs();
-  await loadInventory();
-  document.getElementById('loading-screen').style.display='none';
-  renderTable();
+
+  try { loadPrefs(); } catch(e) {}
+
+  try {
+    await loadInventory();
+  } catch(e) {
+    inventory = [];
+    setSaveState('unsaved');
+  }
+
+  hideLoader();
+
+  try { renderTable(); } catch(e) {}
 })();
 </script>
 </body>
