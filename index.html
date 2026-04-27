@@ -92,7 +92,7 @@
   html { font-size:calc(15px * var(--font-scale)); }
   body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.2s,color 0.2s; line-height:1.5; }
 
-  header { display:flex; align-items:center; justify-content:space-between; padding:1em 2em; border-bottom:1px solid var(--border); background:var(--surface); position:sticky; top:0; z-index:100; gap:10px; flex-wrap:wrap; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:0.8em 1em; border-bottom:1px solid var(--border); background:var(--surface); position:sticky; top:0; z-index:100; gap:10px; flex-wrap:nowrap; }
   .logo { font-size:1.4em; font-weight:900; letter-spacing:-0.02em; white-space:nowrap; font-family:'Nunito',sans-serif; }
 
   .header-stats { display:flex; gap:1.4em; font-family:'Inter',sans-serif; font-size:0.78em; color:var(--muted); }
@@ -344,12 +344,8 @@
   /* ── RESPONSIVE BREAKPOINTS ── */
   @media (max-width: 768px) {
     /* Header */
-    header { padding:0.7em 1em; gap:8px; }
-    .header-stats { display:none; }
-    .size-control { display:none; }
-    .theme-toggle { display:none; }
-    .toolbar .btn-ghost { display:none; }
-    .toolbar #open-file-btn { display:none; }
+    header { padding:0.6em 1em; }
+    header .logo { font-size:1.2em; }
 
     /* App layout: no sidebar column, full width */
     .app { grid-template-columns:1fr; min-height:calc(100vh - 112px); }
@@ -448,18 +444,13 @@
 <header>
   <button class="sidebar-toggle" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
   <div class="logo"><span style="color:var(--accent)">Sam</span>Creation</div>
-  <div class="header-stats">
-    <span>ITEMS: <b id="hdr-total">0</b></span>
-    <span>LISTED: <b id="hdr-listed">0</b></span>
-    <span>VALUE: <b id="hdr-value">£0.00</b></span>
-  </div>
-  <div class="controls-bar">
-    <div class="theme-picker-wrap" id="theme-picker-wrap">
-      <button class="theme-picker-btn" onclick="toggleThemePicker()" id="theme-picker-btn">
-        <div class="theme-picker-swatch" id="theme-swatch" style="background:linear-gradient(135deg,#0f0f0f 50%,#e8ff47 50%)"></div>
-        <span id="theme-picker-label">Volt</span> ▾
-      </button>
-      <div class="theme-picker-dropdown" id="theme-dropdown">
+  <span class="save-indicator unsaved" id="save-indicator" style="margin-left:auto">● UNSAVED</span>
+  <div class="theme-picker-wrap" id="theme-picker-wrap">
+    <button class="theme-picker-btn" onclick="toggleThemePicker()" id="theme-picker-btn">
+      <div class="theme-picker-swatch" id="theme-swatch" style="background:linear-gradient(135deg,#0f0f0f 50%,#e8ff47 50%)"></div>
+      <span id="theme-picker-label">Volt</span> ▾
+    </button>
+    <div class="theme-picker-dropdown" id="theme-dropdown">
         <div class="theme-picker-section">🌙 Dark</div>
         <div class="theme-picker-grid">
           <div class="tp-item active" id="tp-volt" onclick="setTheme('volt')">
@@ -507,21 +498,9 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="size-control" title="Text size">
-      <span>A</span>
-      <input type="range" min="0.85" max="1.3" step="0.05" value="1" id="font-slider" oninput="setFontSize(this.value)">
-      <span style="font-size:1.3em">A</span>
-    </div>
+    
   </div>
-  <div class="toolbar">
-    <span class="save-indicator unsaved" id="save-indicator">● UNSAVED</span>
-    <button class="btn btn-ghost btn-sm" onclick="exportJSON()">⬇ Backup</button>
-    <button class="btn btn-ghost btn-sm" onclick="openExistingFile()">⬆ Restore</button>
-    <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ CSV</button>
-    <input type="file" id="import-file" accept=".csv" style="display:none" onchange="importCSV(event)">
-    <button class="btn btn-accent" onclick="openAddModal()">+ Add Item</button>
-  </div>
+  <input type="file" id="import-file" accept=".csv" style="display:none" onchange="importCSV(event)">
 </header>
 
 <div id="drawer-overlay" onclick="closeSidebar()" style="display:none;opacity:0"></div>
@@ -742,7 +721,7 @@
     <span class="bn-icon">＋</span>
   </button>
   <button class="bn-item" id="bn-save" onclick="manualSave()">
-    <span class="bn-icon">💾</span>Save
+    <span class="bn-icon">💾</span><span id="bn-save-label">Save</span>
   </button>
   <button class="bn-item" id="bn-menu" onclick="toggleSidebar()">
     <span class="bn-icon">☰</span>Menu
@@ -950,6 +929,11 @@ function setSaveState(s) {
   const el = document.getElementById('save-indicator');
   el.className = 'save-indicator '+s;
   el.textContent = s==='saved'?'● SAVED': s==='saving'?'◌ SAVING...':'● UNSAVED';
+  // Also reflect in bottom nav
+  const bn = document.getElementById('bn-save-label');
+  if (bn) bn.textContent = s==='saved'?'Saved': s==='saving'?'Saving':'Save!';
+  const bnBtn = document.getElementById('bn-save');
+  if (bnBtn) bnBtn.style.color = s==='unsaved'?'var(--danger)': s==='saving'?'var(--accent)':'';
 }
 
 // ── HELPERS ──────────────────────────────────────────────────
