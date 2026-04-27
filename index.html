@@ -1396,7 +1396,7 @@ function renderDashboard() {
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${barCol},transparent)"></div>
       <div style="font-size:0.64em;text-transform:uppercase;letter-spacing:0.09em;font-weight:700;color:var(--muted);margin-bottom:8px;margin-top:6px">${lbl}</div>
       <div style="font-family:'Nunito',sans-serif;font-size:1.6em;font-weight:900;line-height:1;color:${valCol}">${val}</div>
-      <div style="display:inline-block;font-size:0.62em;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px;font-family:'DM Mono',monospace;background:${badgeCol}18;color:${badgeCol}">${badge}</div>
+      <div style="display:inline-block;font-size:0.62em;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px;font-family:'DM Mono',monospace;background:var(--surface2);color:${badgeCol}">${badge}</div>
     </div>`;
 
   document.getElementById('dash-tiles').innerHTML =
@@ -1538,7 +1538,8 @@ if (screen.orientation && screen.orientation.lock) {
 (async()=>{
   try { loadPrefs(); } catch(e) {}
   try { await loadInventory(); } catch(e) { inventory = []; }
-  try { renderTable(); renderDashboard(); } catch(e) {}
+  try { renderTable(); } catch(e) {}
+  try { renderDashboard(); } catch(e) { console.error('Dashboard render error:', e); }
 })();
 </script>
 </body>
