@@ -659,13 +659,11 @@
       <div class="form-group full"><label>Internal Notes</label><textarea id="f-notes" placeholder="Private notes..."></textarea></div>
       <div class="form-group full">
         <label>Photos</label>
-        <div class="photo-upload-area" onclick="document.getElementById('f-photos-input').click()">
-          <input type="file" id="f-photos-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-          <div class="photo-upload-placeholder">
-            <span class="icon">📷</span>
-            Tap to add photos (camera or gallery)
-          </div>
-        </div>
+        <label for="f-photos-input" style="display:block;border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.15s;margin-bottom:4px;">
+          <span style="font-size:1.8em;display:block;margin-bottom:4px">📷</span>
+          <span style="color:var(--muted);font-size:0.8em">Tap to add photos (camera or gallery)</span>
+        </label>
+        <input type="file" id="f-photos-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
         <div class="photo-preview-grid" id="photo-preview-grid"></div>
       </div>
     </div>
@@ -1206,18 +1204,24 @@ let currentPhotos = []; // base64 strings for current edit session
 
 function handlePhotoUpload(event) {
   const files = Array.from(event.target.files);
+  if (!files.length) return;
+  let loaded = 0;
   files.forEach(file => {
     const reader = new FileReader();
     reader.onload = e => {
-      // Resize before storing
       resizeImage(e.target.result, 800, b64 => {
         currentPhotos.push(b64);
+        loaded++;
         renderPhotoPreview();
+        // Only clear after ALL files are done
+        if (loaded === files.length) {
+          try { event.target.value = ''; } catch(e) {}
+        }
       });
     };
+    reader.onerror = () => { loaded++; };
     reader.readAsDataURL(file);
   });
-  event.target.value = ''; // allow re-uploading same file
 }
 
 function resizeImage(dataUrl, maxSize, callback) {
