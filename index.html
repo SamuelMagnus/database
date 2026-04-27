@@ -244,6 +244,37 @@
   .empty-float { animation:floatAnim 3s ease-in-out infinite; display:inline-block; }
   @keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
+
+  /* ══ FEATURE CSS ═════════════════════════════════════════════ */
+
+  /* Sparkline */
+  .sparkline-svg { width:100%; height:52px; overflow:visible; display:block; margin-top:12px; }
+
+  /* Best category collapsible */
+  .dash-best-cat { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:14px; }
+  .dash-best-cat-header { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; cursor:pointer; user-select:none; }
+  .dash-best-cat-title { font-family:'Nunito',sans-serif; font-weight:800; font-size:0.9em; display:flex; align-items:center; gap:8px; }
+  .dash-best-cat-chevron { color:var(--muted); font-size:0.75em; transition:transform 0.25s; }
+  .dash-best-cat.open .dash-best-cat-chevron { transform:rotate(180deg); }
+  .dash-best-cat-body { display:none; padding:0 16px 14px; }
+  .dash-best-cat.open .dash-best-cat-body { display:block; }
+  .cat-rank-row { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--border); }
+  .cat-rank-row:last-child { border-bottom:none; }
+
+  /* Item age badge */
+  .age-badge { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:20px; font-size:0.6em; font-weight:700; font-family:'DM Mono',monospace; white-space:nowrap; flex-shrink:0; }
+  .age-fresh { background:rgba(0,255,170,0.1); color:var(--success); }
+  .age-warn  { background:rgba(255,165,0,0.1); color:orange; }
+  .age-old   { background:rgba(255,68,68,0.12); color:var(--danger); }
+
+  /* Price suggestion */
+  .price-suggest { margin-top:10px; padding:10px 12px; background:rgba(255,165,0,0.06); border:1px solid rgba(255,165,0,0.2); border-radius:8px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .price-suggest-text { font-size:0.72em; color:orange; line-height:1.5; }
+  .price-suggest-btn { background:rgba(255,165,0,0.15); color:orange; border:1px solid rgba(255,165,0,0.3); border-radius:6px; padding:5px 10px; font-size:0.68em; font-weight:700; cursor:pointer; white-space:nowrap; font-family:'Inter',sans-serif; flex-shrink:0; }
+
+  /* Confetti */
+  #confetti-root { position:fixed; inset:0; pointer-events:none; z-index:99999; overflow:hidden; }
+
   /* ══ ANIMATIONS ══════════════════════════════════════════════ */
 
   /* Card entrance */
@@ -737,6 +768,7 @@
 
       <div id="dash-banner"></div>
       <div id="dash-tiles" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px"></div>
+      <div id="dash-best-cat" style="margin-bottom:14px"></div>
       <div id="dash-stock-list" style="margin-bottom:14px"></div>
       <div id="dash-breakdowns" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
     </div>
@@ -918,6 +950,7 @@
 </nav>
 
 <div class="toast" id="toast"></div>
+<div id="confetti-root"></div>
 
 <script>
 // Kill any cached service worker immediately — must be first
@@ -1297,6 +1330,14 @@ function renderMobileCards(items) {
       : `<div style="width:80px;height:80px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:6px;text-align:center;overflow:hidden;">
            <span style="font-family:'Nunito',sans-serif;font-weight:900;font-size:0.82em;color:var(--text);line-height:1.2;word-break:break-word;">${esc(item.name||'Item')}</span>
          </div>`;
+    const daysInStock = item.dateAcquired ? Math.floor((Date.now()-new Date(item.dateAcquired).getTime())/(1000*60*60*24)) : 0;
+    const ageBadgeClass = daysInStock <= 14 ? 'age-fresh' : daysInStock <= 30 ? 'age-warn' : 'age-old';
+    const ageBadgeIcon = daysInStock <= 14 ? '🟢' : daysInStock <= 30 ? '⚠️' : '🔴';
+    const ageBadge = item.status==='Sold' ? '' : '<span class="age-badge '+ageBadgeClass+'">'+ageBadgeIcon+' '+daysInStock+'d</span>';
+    const suggestPrice = pricePer > 0 ? (daysInStock > 30 ? (pricePer*0.7).toFixed(2) : daysInStock > 14 ? (pricePer*0.8).toFixed(2) : null) : null;
+    const suggestPct = daysInStock > 30 ? '−30%' : '−20%';
+    const profitAfter = suggestPrice ? (parseFloat(suggestPrice) - costPer).toFixed(2) : 0;
+    const priceSuggest = suggestPrice && item.status !== 'Sold' ? '<div class="price-suggest"><div class="price-suggest-text"><b>Sitting '+daysInStock+' days</b><br>Try £'+suggestPrice+' ('+suggestPct+') · still +£'+profitAfter+' profit</div><button class="price-suggest-btn" onclick="applyPriceSuggestion(\''+item.id+'\','+suggestPrice+')">Apply</button></div>' : '';
     return `<div class="m-card-swipe-wrap">
       <div class="m-card" data-id="${item.id}" data-status="${item.status}" style="padding:14px;background:var(--surface);"
         ontouchstart="startCardLongPress(event,'${item.id}','${esc(item.name||'Item')}')"
@@ -1309,7 +1350,7 @@ function renderMobileCards(items) {
             ${statusTag(item.status)}
           </div>
           ${item.sku?`<div class="m-card-sku">${esc(item.sku)}</div>`:''}
-          <div class="m-card-tags" style="margin-top:4px;margin-bottom:8px;">${catTag(item.category)}${item.location?`<span class="location-badge">📍 ${esc(item.location)}</span>`:''}</div>
+          <div class="m-card-tags" style="margin-top:4px;margin-bottom:6px;">${catTag(item.category)}${item.location?`<span class="location-badge">📍 ${esc(item.location)}</span>`:''} ${ageBadge}</div>
           <div class="card-price-big">${pricePer>0?'£'+pricePer.toFixed(2):'—'}</div>
           <div style="font-size:0.65em;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;">per item${costPer>0&&pricePer>0?` · <span style="color:var(--success)">+£${(pricePer-costPer).toFixed(2)} margin</span>`:''}</div>
         </div>
@@ -1318,6 +1359,7 @@ function renderMobileCards(items) {
       <div class="m-card-row"><span class="m-card-key">Cost per item</span><span class="m-card-val" style="color:var(--muted)">${costPer>0?'£'+costPer.toFixed(2):'—'}</span></div>
       <div class="m-card-row"><span class="m-card-key">Total stock value</span><span class="m-card-val" style="color:var(--accent)">${pricePer>0&&qtyLeft>0?'£'+(pricePer*qtyLeft).toFixed(2):'—'}</span></div>
       ${sales.length>0?`<div class="m-card-row"><span class="m-card-key">Revenue so far</span><span class="m-card-val" style="color:var(--success)">${fmt(totalRevenue)} · +£${totalProfit.toFixed(2)} profit</span></div>`:''}
+      ${priceSuggest}
       <div class="m-card-actions">
         <button class="btn btn-ghost btn-sm" onclick="viewItem('${item.id}')">👁 View</button>
         <button class="btn btn-ghost btn-sm" onclick="editItem('${item.id}')">✏️ Edit</button>
@@ -1759,6 +1801,7 @@ function confirmSale() {
   item.updatedAt=Date.now();
   scheduleSave(); renderTable(); closeModal('sell-modal');
   showToast(`Sale recorded! ${sellQty} sold · Profit: ${profit>=0?'+':''}£${profit.toFixed(2)} ✓`);
+  fireConfetti();
   // Reset manual edit flag
   delete document.getElementById('sell-price-input').dataset.manualEdit;
 }
@@ -1804,6 +1847,24 @@ function executeClearAll() {
 }
 
 // ── COLLAPSIBLE DASHBOARD ────────────────────────────────────
+function applyPriceSuggestion(id, newPricePer) {
+  const item = inventory.find(i=>i.id===id);
+  if (!item) return;
+  const qty = parseInt(item.originalQty||item.qty)||1;
+  item.price = (newPricePer * qty).toFixed(2);
+  item.updatedAt = Date.now();
+  scheduleSave();
+  renderTable();
+  showToast('Price updated to £'+parseFloat(newPricePer).toFixed(2)+' ✓');
+}
+
+function toggleBestCat() {
+  const w = document.getElementById('best-cat-widget');
+  if (!w) return;
+  w.classList.toggle('open');
+  localStorage.setItem('sc_best_cat_open', w.classList.contains('open') ? '1' : '0');
+}
+
 function toggleSection(id) {
   const el = document.getElementById('section-'+id);
   if (!el) return;
@@ -1876,10 +1937,24 @@ function renderDashboard() {
       <div style="font-size:0.63em;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;color:var(--accent);margin-bottom:8px;opacity:0.8">All-Time Performance</div>
       <div style="font-family:'Syne',sans-serif;font-size:2.4em;font-weight:800;line-height:1;letter-spacing:-0.03em;color:var(--text);"><span id="profit-countup" style="font-family:'Nunito',sans-serif;font-weight:900;">£${realProfit.toFixed(0)}</span></div>
       <div style="font-size:0.7em;color:var(--muted);margin-top:4px;margin-bottom:14px;font-family:'DM Mono',monospace;">total profit earned</div>
-      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px;">
         <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Revenue</div><div style="font-family:'Nunito',sans-serif;font-weight:900;color:var(--success)">£${revenue.toFixed(0)}</div></div>
         <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Cost</div><div style="font-family:'Nunito',sans-serif;font-weight:900;color:var(--accent2)">£${allCost.toFixed(0)}</div></div>
         <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Margin</div><div style="font-family:'Nunito',sans-serif;font-weight:900;color:var(--accent)">${margin}%</div></div>
+      </div>
+      <svg class="sparkline-svg" id="sparkline-svg" viewBox="0 0 300 52" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path id="spark-fill" fill="url(#sg)" d=""/>
+        <path id="spark-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d=""/>
+        <circle id="spark-dot" r="3.5" fill="var(--accent)" filter="drop-shadow(0 0 3px var(--accent))"/>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:0.55em;color:var(--muted);font-family:'DM Mono',monospace;margin-top:3px;opacity:0.7;">
+        <span>6w ago</span><span>4w</span><span>2w</span><span>Now</span>
       </div>
     </div>`;
 
@@ -1973,6 +2048,83 @@ function renderDashboard() {
   };
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(runProfitCountup); } else { setTimeout(runProfitCountup, 300); }
 
+
+  // ── BEST SELLING CATEGORY ──
+  const catProfits = {};
+  inventory.forEach(item => {
+    const cat = item.category || 'Other';
+    const oq = parseInt(item.originalQty||item.qty)||1;
+    const cp = (parseFloat(item.cost)||0)/oq;
+    const profit = (item.sales||[]).reduce((s,x) => s + (parseFloat(x.price)||0) - (cp*(parseInt(x.qty)||1)), 0);
+    catProfits[cat] = (catProfits[cat]||0) + profit;
+  });
+  const sortedCats = Object.entries(catProfits).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  const medals = ['🥇','🥈','🥉'];
+  const maxCatProfit = sortedCats[0]?.[1] || 1;
+  const bestCatEl = document.getElementById('dash-best-cat');
+  if (bestCatEl) {
+    const isOpen = localStorage.getItem('sc_best_cat_open') === '1';
+    bestCatEl.innerHTML = `
+      <div class="dash-best-cat${isOpen?' open':''}" id="best-cat-widget">
+        <div class="dash-best-cat-header" onclick="toggleBestCat()">
+          <div class="dash-best-cat-title">🏆 Best Selling Categories</div>
+          <span class="dash-best-cat-chevron">▼</span>
+        </div>
+        <div class="dash-best-cat-body">
+          ${sortedCats.length ? sortedCats.slice(0,5).map(([cat,profit],i) => `
+            <div class="cat-rank-row">
+              <span style="font-size:1.1em;width:22px;text-align:center;">${medals[i]||''}</span>
+              <span style="flex:1;font-size:0.84em;font-weight:600;">${cat}</span>
+              <div style="width:70px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-right:8px;">
+                <div style="height:100%;border-radius:2px;width:${Math.round(profit/maxCatProfit*100)}%;background:var(--accent);"></div>
+              </div>
+              <span style="font-family:'DM Mono',monospace;font-size:0.72em;font-weight:600;color:var(--success);">+£${profit.toFixed(0)}</span>
+            </div>`).join('')
+          : '<p style="color:var(--muted);font-size:0.82em;padding:4px 0;">Record some sales to see rankings</p>'}
+        </div>
+      </div>`;
+  }
+
+  // ── SPARKLINE (weekly sales data) ──
+  setTimeout(() => {
+    const svg = document.getElementById('sparkline-svg');
+    if (!svg) return;
+    // Build weekly profit data from sales
+    const now = Date.now();
+    const weeks = 7;
+    const weekMs = 7*24*60*60*1000;
+    const weeklyProfits = Array(weeks).fill(0);
+    inventory.forEach(item => {
+      const oq = parseInt(item.originalQty||item.qty)||1;
+      const cp = (parseFloat(item.cost)||0)/oq;
+      (item.sales||[]).forEach(sale => {
+        const saleDate = sale.date ? new Date(sale.date).getTime() : now;
+        const weeksAgo = Math.floor((now - saleDate) / weekMs);
+        if (weeksAgo >= 0 && weeksAgo < weeks) {
+          const idx = weeks - 1 - weeksAgo;
+          weeklyProfits[idx] += (parseFloat(sale.price)||0) - cp*(parseInt(sale.qty)||1);
+        }
+      });
+    });
+    // Cumulative
+    const cumulative = weeklyProfits.reduce((acc,v,i) => { acc.push((acc[i-1]||0)+v); return acc; }, []);
+    const data = cumulative.length > 1 ? cumulative : [0,0,0,0,0,0,realProfit];
+    const w=300, h=52, pad=6;
+    const minV = Math.min(...data);
+    const maxV = Math.max(...data, 1);
+    const pts = data.map((v,i) => [
+      pad + (i/(data.length-1))*(w-pad*2),
+      h - pad - ((v-minV)/(maxV-minV||1))*(h-pad*2)
+    ]);
+    const lineD = pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const fillD = lineD + ` L${pts[pts.length-1][0]} ${h} L${pts[0][0]} ${h} Z`;
+    document.getElementById('spark-line').setAttribute('d', lineD);
+    document.getElementById('spark-fill').setAttribute('d', fillD);
+    const last = pts[pts.length-1];
+    document.getElementById('spark-dot').setAttribute('cx', last[0]);
+    document.getElementById('spark-dot').setAttribute('cy', last[1]);
+  }, 100);
+
   document.getElementById('dash-breakdowns').innerHTML = `
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;">
       <div style="font-size:0.68em;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px;">By Category</div>
@@ -2047,6 +2199,29 @@ function parseCSVLine(line){
   r.push(c); return r;
 }
 
+
+// ── CONFETTI ─────────────────────────────────────────────────
+function fireConfetti() {
+  const container = document.getElementById('confetti-root');
+  if (!container) return;
+  const colors = ['var(--accent)','var(--success)','var(--accent2)','#ffd166','#38bfff','#ff6b9d'];
+  for (let i = 0; i < 70; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      const size = 6 + Math.random()*8;
+      el.style.cssText = `position:absolute;width:${size}px;height:${size}px;left:${20+Math.random()*60}%;top:30%;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?'50%':'2px'};pointer-events:none;`;
+      container.appendChild(el);
+      const dx = (Math.random()-0.5)*300;
+      const dy = -(200+Math.random()*300);
+      el.animate([
+        {transform:'translate(0,0) rotate(0deg)',opacity:1},
+        {transform:`translate(${dx}px,${dy/2}px) rotate(180deg)`,opacity:1,offset:0.4},
+        {transform:`translate(${dx*1.2}px,${-dy*0.3}px) rotate(360deg)`,opacity:0}
+      ],{duration:800+Math.random()*600,easing:'cubic-bezier(0.25,0.46,0.45,0.94)',fill:'forwards'})
+      .onfinish = () => el.remove();
+    }, i*12);
+  }
+}
 
 // ── RIPPLE ───────────────────────────────────────────────────
 function addRipple(e, btn) {
