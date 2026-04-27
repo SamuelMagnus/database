@@ -736,9 +736,6 @@ function loadPrefs() {
 
 // ── DATA LAYER ───────────────────────────────────────────────
 // Mobile/PWA: saves silently to app storage (IndexedDB) — no file picker
-// Desktop: same, but Export JSON/CSV available for backup
-
-let fileHandle = null;
 
 const IDB_NAME = 'sc_idb', IDB_STORE = 'inventory', IDB_VER = 1;
 function openIDB() {
