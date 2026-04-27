@@ -1504,7 +1504,18 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// ── LOCK TO PORTRAIT ─────────────────────────────────────────
+if (screen.orientation && screen.orientation.lock) {
+  screen.orientation.lock('portrait').catch(()=>{});
+}
+
 (async()=>{
+  // Lock to portrait when running as installed PWA
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock('portrait');
+    }
+  } catch(e) {}
   loadPrefs();
   await loadInventory();
   document.getElementById('loading-screen').style.display='none';
