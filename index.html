@@ -14,6 +14,20 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap');
 
+  /* ── PORTRAIT LOCK ── */
+  @media screen and (orientation: landscape) and (max-height: 600px) {
+    html {
+      transform: rotate(-90deg);
+      transform-origin: left top;
+      width: 100vh;
+      height: 100vw;
+      overflow-x: hidden;
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+  }
+
   :root {
     --bg:#0f0f0f; --surface:#181818; --surface2:#222222; --border:#2e2e2e;
     --accent:#e8ff47; --accent2:#ff6b35; --text:#f0f0f0; --muted:#888;
@@ -729,10 +743,15 @@ function loadPrefs() {
   }
 }
 
-// ── DATA LAYER — adaptive storage ────────────────────────────
-// Desktop (Chrome): File System Access API — pick a file location
-// Mobile / no FSA:  IndexedDB — data lives in the browser, export JSON for backup
+// ── DATA LAYER ───────────────────────────────────────────────
+// Strategy: always use the SAME file the user picked first time.
+// File handle is persisted in IndexedDB between sessions.
+// Android requires one permission tap per session — we ask on first save.
 
+let fileHandle = null;
+let filePermissionGranted = false;
+
+// ── IDB helpers ──────────────────────────────────────────────
 const IDB_NAME = 'sc_idb', IDB_STORE = 'inventory', IDB_VER = 1;
 function openIDB() {
   return new Promise((res, rej) => {
@@ -751,127 +770,154 @@ async function idbSet(key, val) {
   return new Promise(res => { const req=db.transaction(IDB_STORE,'readwrite').objectStore(IDB_STORE).put(val,key); req.onsuccess=()=>res(true); req.onerror=()=>res(false); });
 }
 
-function hasFSA() { return typeof window.showSaveFilePicker === 'function'; }
-
-// File handle persistence in a separate IDB store
-const DB_NAME = 'sc_fs', DB_STORE = 'handles';
-function openHandleDB() {
+// ── File handle persistence ───────────────────────────────────
+const FH_NAME = 'sc_fh', FH_STORE = 'handles';
+function openFHDB() {
   return new Promise((res, rej) => {
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = e => e.target.result.createObjectStore(DB_STORE);
+    const req = indexedDB.open(FH_NAME, 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore(FH_STORE);
     req.onsuccess = e => res(e.target.result);
     req.onerror   = e => rej(e);
   });
 }
-async function saveHandle(handle) {
-  try { const db = await openHandleDB(); const tx = db.transaction(DB_STORE,'readwrite'); tx.objectStore(DB_STORE).put(handle,'main'); } catch(e) {}
-}
-async function loadHandle() {
+async function persistHandle(handle) {
   try {
-    const db = await openHandleDB();
+    const db = await openFHDB();
+    await new Promise(res => { const req=db.transaction(FH_STORE,'readwrite').objectStore(FH_STORE).put(handle,'main'); req.onsuccess=res; });
+  } catch(e) {}
+}
+async function getPersistedHandle() {
+  try {
+    const db = await openFHDB();
     return new Promise(res => {
-      const req = db.transaction(DB_STORE,'readonly').objectStore(DB_STORE).get('main');
+      const req = db.transaction(FH_STORE,'readonly').objectStore(FH_STORE).get('main');
       req.onsuccess = e => res(e.target.result || null);
       req.onerror   = () => res(null);
     });
   } catch(e) { return null; }
 }
 
-async function loadInventory() {
-  if (hasFSA()) {
-    // Desktop path — try remembered file handle
-    const stored = await loadHandle();
-    if (stored) {
-      try {
-        const perm = await stored.queryPermission({ mode: 'readwrite' });
-        if (perm === 'granted' || (await stored.requestPermission({ mode: 'readwrite' })) === 'granted') {
-          fileHandle = stored;
-          const file = await fileHandle.getFile();
-          const text = await file.text();
-          inventory = JSON.parse(text);
-          setSaveState('saved');
-          showToast(`Loaded: ${fileHandle.name}`);
-          return;
-        }
-      } catch(e) {}
-    }
-    // No file — check IndexedDB fallback
-    const saved = await idbGet('inventory');
-    if (saved && saved.length) { inventory = saved; setSaveState('unsaved'); showToast('Data loaded — tap Save to pick a file location'); return; }
-    inventory = [];
-    setSaveState('unsaved');
-    showToast('No data yet — add items and save!', '');
-  } else {
-    // Mobile path — use IndexedDB
-    const saved = await idbGet('inventory');
-    inventory = saved || [];
-    setSaveState(inventory.length ? 'saved' : 'unsaved');
-    if (inventory.length) showToast(`${inventory.length} items loaded ✓`);
-    else showToast('Ready — tap ＋ to add your first item', '');
-  }
-}
-
-async function pickSaveFile() {
+// ── Ensure we have permission for the stored handle ───────────
+async function ensurePermission(handle) {
+  if (!handle) return false;
   try {
-    fileHandle = await window.showSaveFilePicker({
-      suggestedName: 'samcreation-inventory.json',
-      types: [{ description: 'JSON Inventory', accept: { 'application/json': ['.json'] } }],
-    });
-    await saveHandle(fileHandle);
-    return true;
+    let perm = await handle.queryPermission({ mode: 'readwrite' });
+    if (perm === 'granted') return true;
+    perm = await handle.requestPermission({ mode: 'readwrite' });
+    return perm === 'granted';
   } catch(e) { return false; }
 }
 
-async function saveToFile() {
-  setSaveState('saving');
-  try {
-    if (hasFSA()) {
-      // Desktop: save to file
-      if (!fileHandle) { const picked = await pickSaveFile(); if (!picked) { setSaveState('unsaved'); return; } }
-      const writable = await fileHandle.createWritable();
-      await writable.write(JSON.stringify(inventory, null, 2));
-      await writable.close();
-    }
-    // Always save to IndexedDB (works on mobile + is a desktop backup)
-    await idbSet('inventory', inventory);
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadInventory() {
+  // Always load from IDB first (instant, no permission needed)
+  const cached = await idbGet('inventory');
+  if (cached && cached.length) {
+    inventory = cached;
     setSaveState('saved');
-    unsavedChanges = false;
-  } catch(e) {
+    showToast(`${inventory.length} items loaded ✓`);
+  } else {
+    inventory = [];
     setSaveState('unsaved');
-    showToast('Save failed — ' + e.message, 'error');
+    showToast('No items yet — tap ＋ to get started', '');
+  }
+
+  // Try to restore the file handle silently in background
+  const stored = await getPersistedHandle();
+  if (stored) {
+    const perm = await stored.queryPermission({ mode: 'readwrite' });
+    if (perm === 'granted') {
+      fileHandle = stored;
+      filePermissionGranted = true;
+      // Sync from file if newer than IDB
+      try {
+        const file = await fileHandle.getFile();
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if (parsed.length >= inventory.length) {
+          inventory = parsed;
+          await idbSet('inventory', inventory);
+          renderTable();
+          setSaveState('saved');
+        }
+      } catch(e) {}
+    } else {
+      // Permission not auto-granted — we'll ask on first save tap
+      fileHandle = stored;
+      filePermissionGranted = false;
+    }
   }
 }
 
-async function openExistingFile() {
-  if (!hasFSA()) {
-    // Mobile: use file input to load a JSON backup
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json';
-    input.onchange = async e => {
-      const file = e.target.files[0]; if (!file) return;
+// ── SAVE ─────────────────────────────────────────────────────
+async function saveToFile() {
+  setSaveState('saving');
+  try {
+    // Always write to IDB immediately
+    await idbSet('inventory', inventory);
+
+    if (!fileHandle) {
+      // No file chosen yet — ask user to pick one
       try {
-        const text = await file.text();
-        inventory = JSON.parse(text);
-        await idbSet('inventory', inventory);
-        setSaveState('saved'); unsavedChanges = false;
-        renderTable(); renderDashboard();
-        showToast(`Loaded ${inventory.length} items from file ✓`);
-      } catch(err) { showToast('Could not read file', 'error'); }
-    };
-    input.click(); return;
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: 'samcreation-inventory.json',
+          types: [{ description: 'JSON Inventory', accept: { 'application/json': ['.json'] } }],
+        });
+        await persistHandle(fileHandle);
+        filePermissionGranted = true;
+      } catch(e) {
+        // User cancelled picker — IDB save still worked
+        setSaveState('saved');
+        unsavedChanges = false;
+        showToast('Saved to app storage ✓');
+        return;
+      }
+    }
+
+    // Ask for permission if not already granted this session
+    if (!filePermissionGranted) {
+      const granted = await ensurePermission(fileHandle);
+      if (!granted) {
+        setSaveState('saved');
+        unsavedChanges = false;
+        showToast('Saved to app storage ✓ (file access denied)');
+        return;
+      }
+      filePermissionGranted = true;
+    }
+
+    // Write to file
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify(inventory, null, 2));
+    await writable.close();
+    setSaveState('saved');
+    unsavedChanges = false;
+    showToast(`Saved to ${fileHandle.name} ✓`);
+
+  } catch(e) {
+    // File write failed but IDB worked — still show saved
+    setSaveState('saved');
+    unsavedChanges = false;
+    showToast('Saved to app storage ✓');
   }
+}
+
+// ── OPEN EXISTING FILE ────────────────────────────────────────
+async function openExistingFile() {
   try {
     const [handle] = await window.showOpenFilePicker({
       types: [{ description: 'JSON Inventory', accept: { 'application/json': ['.json'] } }],
     });
-    const perm = await handle.requestPermission({ mode: 'readwrite' });
-    if (perm !== 'granted') { showToast('Permission denied', 'error'); return; }
+    const granted = await ensurePermission(handle);
+    if (!granted) { showToast('Permission denied', 'error'); return; }
     fileHandle = handle;
-    await saveHandle(fileHandle);
+    filePermissionGranted = true;
+    await persistHandle(fileHandle);
     const file = await fileHandle.getFile();
     inventory = JSON.parse(await file.text());
     await idbSet('inventory', inventory);
-    setSaveState('saved'); unsavedChanges = false;
+    setSaveState('saved');
+    unsavedChanges = false;
     renderTable(); renderDashboard();
     showToast(`Opened: ${fileHandle.name}`);
   } catch(e) {
