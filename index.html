@@ -1153,6 +1153,7 @@ function renderMobileCards(items) {
       <div class="m-card-row"><span class="m-card-key">Total stock value</span><span class="m-card-val" style="color:var(--accent)">${pricePer>0&&qtyLeft>0?'£'+(pricePer*qtyLeft).toFixed(2):'—'}</span></div>
       ${sales.length>0?`<div class="m-card-row"><span class="m-card-key">Revenue so far</span><span class="m-card-val" style="color:var(--accent2)">${fmt(totalRevenue)} <span style="color:${totalProfit>=0?'var(--success)':'var(--danger)'};font-size:0.85em">${totalProfit>=0?'+':''}£${totalProfit.toFixed(2)} profit</span></span></div>`:''}
       <div class="m-card-actions">
+        <button class="btn btn-ghost btn-sm" onclick="viewItem('${item.id}')">👁 View</button>
         <button class="btn btn-ghost btn-sm" onclick="editItem('${item.id}')">✏️ Edit</button>
         ${item.status!=='Sold'
           ?`<button class="btn btn-sm" style="background:rgba(255,107,53,0.15);color:var(--accent2);border:1px solid rgba(255,107,53,0.3)" onclick="openSellModal('${item.id}')">🏷 Sold</button>`
