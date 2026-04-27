@@ -306,7 +306,7 @@
   .theme-picker-btn { display:flex; align-items:center; gap:6px; background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 12px; cursor:pointer; font-family:'Inter',sans-serif; font-size:0.75em; font-weight:700; color:var(--text); transition:all 0.15s; white-space:nowrap; }
   .theme-picker-btn:hover { border-color:var(--accent); }
   .theme-picker-swatch { width:14px; height:14px; border-radius:50%; border:1px solid rgba(128,128,128,0.3); flex-shrink:0; }
-  .theme-picker-dropdown { display:none; position:absolute; top:calc(100% + 8px); right:0; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px; z-index:500; box-shadow:0 8px 32px rgba(0,0,0,0.3); width:220px; }
+  .theme-picker-dropdown { display:none; position:fixed; top:70px; left:50%; transform:translateX(-50%); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px; z-index:500; box-shadow:0 8px 32px rgba(0,0,0,0.4); width:260px; max-width:calc(100vw - 24px); }
   .theme-picker-dropdown.open { display:block; }
   .theme-picker-section { font-size:0.62em; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); padding:4px 4px 6px; }
   .theme-picker-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:8px; }
@@ -317,10 +317,7 @@
   .tp-label { font-size:0.55em; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); white-space:nowrap; }
   .tp-item.active .tp-label { color:var(--accent); }
 
-  /* Mobile theme picker — in bottom menu */
-  @media (max-width:768px) {
-    .theme-picker-dropdown { right:auto; left:0; width:240px; }
-  }
+  /* theme picker is fixed/centered — no mobile override needed */
   ::-webkit-scrollbar-track{background:var(--bg);}
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
   ::-webkit-scrollbar-thumb:hover{background:#888;}
