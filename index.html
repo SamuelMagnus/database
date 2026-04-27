@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>SamCreation — eBay Inventory</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap');
 
   /* Portrait lock handled by manifest.json */
 
@@ -93,8 +93,8 @@
   html { font-size:calc(15px * var(--font-scale)); }
   body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.2s,color 0.2s; line-height:1.5; }
 
-  header { display:flex; align-items:center; justify-content:space-between; padding:0.8em 1em; padding-top:calc(0.8em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:var(--surface); position:sticky; top:0; z-index:90; gap:10px; flex-wrap:nowrap; }
-  .logo { font-size:1.4em; font-weight:900; letter-spacing:-0.02em; white-space:nowrap; font-family:'Nunito',sans-serif; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:0.8em 1em; padding-top:calc(0.8em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:rgba(var(--surface-rgb,17,17,24),0.82); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); position:sticky; top:0; z-index:90; gap:10px; flex-wrap:nowrap; }
+  .logo { font-size:1.35em; font-weight:800; letter-spacing:-0.03em; white-space:nowrap; font-family:'Syne',sans-serif; }
 
   .header-stats { display:flex; gap:1.4em; font-family:'Inter',sans-serif; font-size:0.78em; color:var(--muted); }
   .header-stats b { color:var(--accent); font-weight:600; }
@@ -203,6 +203,98 @@
   .modal-overlay.open { display:flex; }
   .modal { background:var(--surface); border:1px solid var(--border); border-radius:10px; width:100%; max-width:600px; padding:1.8em; position:relative; animation:slideUp 0.2s ease; }
   @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+
+  /* ══ UI ENHANCEMENTS ══════════════════════════════════════════ */
+  .avatar-btn { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent))); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:0.72em; color:#111; flex-shrink:0; border:none; cursor:pointer; }
+
+  /* Status-tinted card borders */
+  .m-card[data-status="In Stock"]  { border-left:2px solid var(--success) !important; }
+  .m-card[data-status="Low Stock"] { border-left:2px solid var(--danger) !important; }
+  .m-card[data-status="Listed"]    { border-left:2px solid var(--accent) !important; }
+  .m-card[data-status="Sold"]      { border-left:2px solid var(--muted) !important; opacity:0.75; }
+
+  /* Larger price on card */
+  .card-price-big { font-family:'Syne',sans-serif; font-size:1.35em; font-weight:800; color:var(--accent); line-height:1; }
+
+  /* Greeting */
+  .greeting-bar { padding:18px 16px 4px; text-align:center; }
+  .greeting-time-lbl { font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); font-weight:600; margin-bottom:3px; }
+  .greeting-name { font-family:'Syne',sans-serif; font-size:1.5em; font-weight:800; letter-spacing:-0.02em; display:inline-block; animation:floatAnim 4s ease-in-out infinite; }
+
+  /* Action sheet */
+  .action-sheet-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; align-items:flex-end; justify-content:center; }
+  .action-sheet-overlay.open { display:flex; }
+  .action-sheet { background:var(--surface); border-radius:20px 20px 0 0; width:100%; max-width:480px; padding:0 0 30px; animation:sheetSpring 0.35s cubic-bezier(0.34,1.4,0.64,1); }
+  @keyframes sheetSpring { from{transform:translateY(100%)} to{transform:translateY(0)} }
+  .sheet-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 16px; }
+  .sheet-item-name { font-family:'Syne',sans-serif; font-weight:800; font-size:1em; padding:0 20px 14px; border-bottom:1px solid var(--border); margin-bottom:6px; }
+  .sheet-row { display:flex; align-items:center; gap:14px; padding:14px 20px; font-size:0.9em; font-weight:500; cursor:pointer; transition:background 0.12s; }
+  .sheet-row:hover { background:var(--surface2); }
+  .sheet-row .si { font-size:1.2em; width:22px; text-align:center; }
+  .sheet-danger { color:var(--danger); }
+
+  /* Gradient + Add button in bottom nav */
+  #bn-add-main { background:linear-gradient(135deg,var(--accent),var(--accent2,var(--sold))); border-radius:14px !important; box-shadow:0 4px 20px rgba(100,100,200,0.35); width:52px !important; height:52px !important; font-size:1.6em; color:#fff; border:none; }
+
+  /* Animated empty state */
+  .empty-float { animation:floatAnim 3s ease-in-out infinite; display:inline-block; }
+  @keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* ══ ANIMATIONS ══════════════════════════════════════════════ */
+
+  /* Card entrance */
+  @keyframes cardEnter {
+    from { opacity:0; transform:translateY(22px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .m-card { opacity:0; }
+  .m-card.visible { animation:cardEnter 0.35s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+  /* Spring modal */
+  @keyframes springIn {
+    0%   { opacity:0; transform:translateY(60px) scale(0.96); }
+    55%  { transform:translateY(-6px) scale(1.01); }
+    75%  { transform:translateY(3px) scale(0.995); }
+    100% { opacity:1; transform:translateY(0) scale(1); }
+  }
+  .modal-overlay.open .modal { animation:springIn 0.42s cubic-bezier(0.34,1.4,0.64,1) forwards; }
+
+  /* Toast spring */
+  @keyframes toastSpringIn  { from{opacity:0;transform:translateY(16px) scale(0.92)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes toastSpringOut { from{opacity:1;transform:translateY(0) scale(1)} to{opacity:0;transform:translateY(12px) scale(0.94)} }
+  .toast.show  { animation:toastSpringIn  0.3s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  .toast.hide  { animation:toastSpringOut 0.25s ease forwards; }
+
+  /* Page crossfade */
+  @keyframes pageIn  { from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:translateX(0)} }
+  .page.active { animation:pageIn 0.22s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+  /* Button press scale */
+  .btn, .bn-add, button { transition:transform 0.1s, box-shadow 0.1s; }
+  .btn:active, button:active { transform:scale(0.94); }
+
+  /* Ripple */
+  .ripple-origin { position:relative; overflow:hidden; }
+  .ripple-wave { position:absolute; border-radius:50%; background:rgba(255,255,255,0.25); transform:scale(0); animation:rippleGo 0.55s linear; pointer-events:none; }
+  @keyframes rippleGo { to { transform:scale(4); opacity:0; } }
+
+  /* Skeleton */
+  @keyframes shimmer {
+    0%   { background-position:-600px 0; }
+    100% { background-position:600px 0; }
+  }
+  .skel-item { background:#12121e; border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:10px; display:flex; gap:12px; }
+  .skel-box { background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%); background-size:1200px 100%; animation:shimmer 1.5s infinite; border-radius:6px; }
+  .skel-thumb { width:80px; height:80px; flex-shrink:0; border-radius:8px; }
+  .skel-line  { height:13px; margin-bottom:8px; }
+
+  /* Swipe to delete */
+  .m-card-swipe-wrap { position:relative; overflow:hidden; border-radius:10px; margin-bottom:10px; }
+  .m-card-delete-bg  { position:absolute; right:0; top:0; bottom:0; background:var(--danger); display:flex; align-items:center; padding:0 22px; color:#fff; font-weight:800; font-size:0.82em; gap:6px; pointer-events:none; }
+  .m-card { margin-bottom:0; border-radius:10px; touch-action:pan-y; cursor:default; will-change:transform; }
+  .m-card.swiped { transform:translateX(-80px) !important; }
+
   .modal-title { font-size:1.25em; font-weight:800; margin-bottom:1.4em; letter-spacing:-0.01em; font-family:'Nunito',sans-serif; }
   .modal-close { position:absolute; top:16px; right:18px; background:none; border:none; color:var(--muted); font-size:1.4em; cursor:pointer; line-height:1; padding:4px; }
   .modal-close:hover { color:var(--text); }
@@ -377,7 +469,7 @@
   /* overlay visibility controlled via JS inline styles */
 
   /* ── BOTTOM NAV (mobile only) ── */
-  .bottom-nav { display:flex; position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid var(--border); z-index:150; padding:0; padding-bottom:env(safe-area-inset-bottom); }
+  .bottom-nav { display:flex; position:fixed; bottom:0; left:0; right:0; background:rgba(var(--surface-rgb,17,17,24),0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid var(--border); z-index:150; padding:0; padding-bottom:env(safe-area-inset-bottom); }
   .bn-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 4px 8px; cursor:pointer; font-size:0.62em; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; gap:3px; border:none; background:none; font-family:'Inter',sans-serif; transition:color 0.15s; }
   .bn-item .bn-icon { font-size:1.6em; line-height:1; }
   .bn-item.active { color:var(--accent); }
@@ -476,20 +568,19 @@
 <body>
 
 <div id="loading-screen">
-  <div class="logo"><span style="color:var(--accent)">Sam</span>Creation</div>
+  <div class="logo"><span style="background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Sam</span>Creation</div>
   <div class="spinner"></div>
   <div id="loading-msg">Loading inventory...</div>
 </div>
 
 <header>
   <button class="sidebar-toggle" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
-  <div class="logo"><span style="color:var(--accent)">Sam</span>Creation</div>
+  <div class="logo"><span style="background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Sam</span>Creation</div>
   <span class="save-indicator unsaved" id="save-indicator" style="margin-left:auto;margin-right:auto">● UNSAVED</span>
-  <button onclick="openAddModal()" style="background:var(--accent);color:#111;border:none;border-radius:20px;padding:5px 12px;font-size:0.72em;font-weight:800;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;flex-shrink:0;">+ Add</button>
+  <button onclick="addRipple(event,this);openAddModal()" style="background:var(--accent);color:#111;border:none;border-radius:20px;padding:5px 12px;font-size:0.72em;font-weight:800;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;flex-shrink:0;position:relative;overflow:hidden;">+ Add</button>
   <div class="theme-picker-wrap" id="theme-picker-wrap">
     <button class="theme-picker-btn" onclick="toggleThemePicker()" id="theme-picker-btn">
-      <div class="theme-picker-swatch" id="theme-swatch" style="background:linear-gradient(135deg,#0f0f0f 50%,#e8ff47 50%)"></div>
-      <span id="theme-picker-label">Volt</span> ▾
+      🎨 Theme ▾
     </button>
     <div class="theme-picker-dropdown" id="theme-dropdown">
         <div class="theme-picker-section">🌙 Dark</div>
@@ -542,7 +633,22 @@
     
   </div>
   <input type="file" id="import-file" accept=".csv,text/csv,text/plain,application/csv" style="display:none" onchange="importCSV(event)">
+  <button class="avatar-btn" title="Samuel" onclick="toggleSidebar()">S</button>
 </header>
+
+
+<!-- GREETING (injected into dashboard) -->
+<!-- ACTION SHEET -->
+<div class="action-sheet-overlay" id="action-sheet-overlay" onclick="closeActionSheet()">
+  <div class="action-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-item-name" id="sheet-item-name">Item</div>
+    <div class="sheet-row" onclick="closeActionSheet();viewItem(currentSheetId)"><span class="si">👁</span> View details</div>
+    <div class="sheet-row" onclick="closeActionSheet();editItem(currentSheetId)"><span class="si">✏️</span> Edit item</div>
+    <div class="sheet-row" onclick="closeActionSheet();openSellModal(currentSheetId)"><span class="si">🏷</span> Record a sale</div>
+    <div class="sheet-row sheet-danger" onclick="closeActionSheet();confirmDelete(currentSheetId)"><span class="si">🗑</span> Delete item</div>
+  </div>
+</div>
 
 <div id="drawer-overlay" onclick="closeSidebar();event.stopPropagation();" style="display:none;opacity:0"></div>
 
@@ -573,6 +679,7 @@
     <div class="nav-item" onclick="openExistingFile()"><span class="icon">⬆</span> <span class="nav-label">Restore Backup</span></div>
     <div class="nav-item" onclick="exportCSV()"><span class="icon">📋</span> <span class="nav-label">Export CSV</span></div>
     <div class="nav-item" onclick="triggerImport()"><span class="icon">📂</span> <span class="nav-label">Import CSV</span></div>
+    <div class="nav-item" onclick="changeName()"><span class="icon">✏️</span> <span class="nav-label">Change Name</span></div>
     <br>
     <div class="nav-item" onclick="clearAllData()"
       style="margin:8px 12px;background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);border-radius:6px;color:var(--danger);font-weight:800;border-left:3px solid var(--danger);padding:11px 16px;"
@@ -618,6 +725,7 @@
 
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
+      <div class="greeting-bar" id="greeting-bar"></div>
       <div class="page-header">
         <div><div class="page-title">Dashboard</div><div class="page-sub">Your inventory at a glance</div></div>
       </div>
@@ -677,7 +785,7 @@
 
     </div>
 
-    <button onclick="saveItem()" style="display:block;width:calc(100% - 2.8em);margin:16px 1.4em 0;padding:16px;background:var(--accent);color:#111;border:none;border-radius:10px;font-size:1em;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">💾 Save Item</button>
+    <button onclick="addRipple(event,this);saveItem()" style="display:block;width:calc(100% - 2.8em);margin:16px 1.4em 0;padding:16px;background:var(--accent);color:#111;border:none;border-radius:10px;font-size:1em;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;position:relative;overflow:hidden;">💾 Save Item</button>
     <button onclick="closeModal('item-modal')" style="display:block;width:calc(100% - 2.8em);margin:8px 1.4em 80px;padding:12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;font-size:0.9em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
   </div>
 </div>
@@ -792,7 +900,7 @@
   <button onclick="bottomNav('inventory')" id="bn-inventory" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;font-size:0.62em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;gap:3px;border:none;background:none;font-family:'Inter',sans-serif;">
     <span style="font-size:1.6em;line-height:1">📦</span>Inventory
   </button>
-  <button onclick="openAddModal()" style="background:var(--accent);color:#111;border-radius:12px;margin:6px 4px;width:56px;height:56px;border:none;cursor:pointer;font-size:1.8em;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+  <button onclick="openAddModal()" id="bn-add-main" style="background:linear-gradient(135deg,var(--accent),var(--sold,#6495ed));color:#fff;border-radius:14px;margin:5px 4px;width:54px;height:54px;border:none;cursor:pointer;font-size:1.6em;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(100,100,200,0.3);flex-shrink:0;">
     ＋
   </button>
   <button onclick="manualSave()" id="bn-save" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;font-size:0.62em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;gap:3px;border:none;background:none;font-family:'Inter',sans-serif;">
@@ -877,10 +985,8 @@ function setTheme(t) {
   localStorage.setItem('sc_theme', t);
   // Update picker button
   const meta = THEME_META[t] || THEME_META.volt;
-  const swatch = document.getElementById('theme-swatch');
-  const label  = document.getElementById('theme-picker-label');
-  if (swatch) swatch.style.background = meta.swatch;
-  if (label)  label.textContent = meta.label;
+  const label = document.getElementById('theme-picker-label');
+  if (label) label.textContent = meta.label;
   // Update active state in dropdown
   document.querySelectorAll('.tp-item').forEach(el => el.classList.remove('active'));
   const active = document.getElementById('tp-'+t);
@@ -1012,11 +1118,18 @@ function setSaveState(s) {
   const bn = document.getElementById('bn-save-label');
   if (bn) bn.textContent = s==='saved'?'Saved': s==='saving'?'Saving':'Save!';
   const bnBtn = document.getElementById('bn-save');
-  if (bnBtn) bnBtn.style.color = s==='unsaved'?'var(--danger)': s==='saving'?'var(--accent)':'';
+  if (bnBtn) bnBtn.style.color = s==='unsaved'?'var(--danger)': s==='saving'?'var(--accent)':'var(--muted)';
 }
 
 // ── HELPERS ──────────────────────────────────────────────────
-function showToast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(type?' '+type:''); setTimeout(()=>t.className='toast',2800); }
+function showToast(msg,type='') {
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show'+(type?' '+type:'');
+  if(navigator.vibrate) navigator.vibrate(type==='error'?[10,30,10]:8);
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>{ t.className='toast hide'; setTimeout(()=>t.className='toast',300); },2500);
+}
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function showPage(page, el) {
@@ -1132,10 +1245,25 @@ function renderInStock() {
   if (container) container.innerHTML = '';
 }
 
+function skeletonHTML() {
+  return [1,2,3].map(()=>`
+    <div class="skel-item">
+      <div class="skel-box skel-thumb"></div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+        <div class="skel-box skel-line" style="width:55%;"></div>
+        <div class="skel-box skel-line" style="width:35%;"></div>
+        <div class="skel-box skel-line" style="width:70%;margin-bottom:0;"></div>
+      </div>
+    </div>`).join('');
+}
+
 function renderMobileCards(items) {
   const container = document.getElementById('mobile-cards');
   if (!container) return;
-  container.innerHTML = items.length ? items.map(item => {
+  // Show skeletons briefly then animate in real cards
+  container.innerHTML = skeletonHTML();
+  setTimeout(() => {
+    container.innerHTML = items.length ? items.map(item => {
     const sales = item.sales || [];
     const totalSoldQty = sales.reduce((s,x)=>s+(parseInt(x.qty)||0),0);
     const totalRevenue = sales.reduce((s,x)=>s+(parseFloat(x.price)||0),0);
@@ -1149,23 +1277,28 @@ function renderMobileCards(items) {
       : `<div style="width:80px;height:80px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:6px;text-align:center;overflow:hidden;">
            <span style="font-family:'Nunito',sans-serif;font-weight:900;font-size:0.82em;color:var(--text);line-height:1.2;word-break:break-word;">${esc(item.name||'Item')}</span>
          </div>`;
-    return `<div class="m-card" style="padding:14px;">
-      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
+    return `<div class="m-card-swipe-wrap">
+      <div class="m-card-delete-bg">🗑 Delete</div>
+      <div class="m-card" data-id="${item.id}" data-status="${item.status}" style="padding:14px;background:var(--surface);"
+        ontouchstart="startCardLongPress(event,'${item.id}','${esc(item.name||'Item')}')"
+        ontouchend="cancelCardLongPress()" ontouchmove="cancelCardLongPress()">
+      <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:12px;">
         ${photoHtml}
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:4px;">
-            <div class="m-card-name">${esc(item.name||'Unnamed')}</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px;">
+            <div class="m-card-name" style="font-family:'Syne',sans-serif;font-size:1em;font-weight:800;">${esc(item.name||'Unnamed')}</div>
             ${statusTag(item.status)}
           </div>
           ${item.sku?`<div class="m-card-sku">${esc(item.sku)}</div>`:''}
-          <div class="m-card-tags" style="margin-top:4px;">${catTag(item.category)}${item.location?`<span class="location-badge">📍 ${esc(item.location)}</span>`:''}</div>
+          <div class="m-card-tags" style="margin-top:4px;margin-bottom:8px;">${catTag(item.category)}${item.location?`<span class="location-badge">📍 ${esc(item.location)}</span>`:''}</div>
+          <div class="card-price-big">${pricePer>0?'£'+pricePer.toFixed(2):'—'}</div>
+          <div style="font-size:0.65em;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;">per item${costPer>0&&pricePer>0?` · <span style="color:var(--success)">+£${(pricePer-costPer).toFixed(2)} margin</span>`:''}</div>
         </div>
       </div>
       <div class="m-card-row"><span class="m-card-key">Qty in stock</span><span class="m-card-val" style="color:${qtyColor}">${qtyLeft}${totalSoldQty>0?` <span style="color:var(--muted);font-size:0.85em">(${totalSoldQty} sold)</span>`:''}</span></div>
       <div class="m-card-row"><span class="m-card-key">Cost per item</span><span class="m-card-val" style="color:var(--muted)">${costPer>0?'£'+costPer.toFixed(2):'—'}</span></div>
-      <div class="m-card-row"><span class="m-card-key">Listed per item</span><span class="m-card-val">${pricePer>0?'£'+pricePer.toFixed(2):'—'}</span></div>
       <div class="m-card-row"><span class="m-card-key">Total stock value</span><span class="m-card-val" style="color:var(--accent)">${pricePer>0&&qtyLeft>0?'£'+(pricePer*qtyLeft).toFixed(2):'—'}</span></div>
-      ${sales.length>0?`<div class="m-card-row"><span class="m-card-key">Revenue so far</span><span class="m-card-val" style="color:var(--accent2)">${fmt(totalRevenue)} <span style="color:${totalProfit>=0?'var(--success)':'var(--danger)'};font-size:0.85em">${totalProfit>=0?'+':''}£${totalProfit.toFixed(2)} profit</span></span></div>`:''}
+      ${sales.length>0?`<div class="m-card-row"><span class="m-card-key">Revenue so far</span><span class="m-card-val" style="color:var(--success)">${fmt(totalRevenue)} · +£${totalProfit.toFixed(2)} profit</span></div>`:''}
       <div class="m-card-actions">
         <button class="btn btn-ghost btn-sm" onclick="viewItem('${item.id}')">👁 View</button>
         <button class="btn btn-ghost btn-sm" onclick="editItem('${item.id}')">✏️ Edit</button>
@@ -1174,9 +1307,19 @@ function renderMobileCards(items) {
           :`<button class="btn btn-sm" style="background:rgba(68,255,136,0.1);color:var(--success);border:1px solid rgba(68,255,136,0.25)" onclick="markAsInStock('${item.id}')">↩ Relist</button>`}
         <button class="btn btn-danger btn-sm" onclick="confirmDelete('${item.id}')">🗑</button>
       </div>
+    </div>
     </div>`;
   }).join('')
-  :`<div style="text-align:center;padding:60px 20px;color:var(--muted)"><div style="font-size:3em;margin-bottom:12px">📦</div><p>${inventory.length===0?'No items yet. Tap <strong>＋</strong> to get started.':'No items match your filters.'}</p></div>`;
+    :`<div style="text-align:center;padding:60px 20px;color:var(--muted)"><div style="font-size:3em;margin-bottom:12px" class="empty-float">📦</div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1em;margin-bottom:6px;color:var(--text)">${inventory.length===0?'Nothing here yet':'No matches'}</div><p style="font-size:0.82em;line-height:1.6">${inventory.length===0?'Tap <strong>＋</strong> to add your first item and start tracking':'Try a different search or filter'}</p></div>`;
+    // Staggered entrance animation
+    requestAnimationFrame(() => {
+      container.querySelectorAll('.m-card').forEach((card, i) => {
+        card.style.animationDelay = `${i * 0.06}s`;
+        card.classList.add('visible');
+      });
+      initSwipeToDelete();
+    });
+  }, 180);
 }
 
 // ── CALC ROW ─────────────────────────────────────────────────
@@ -1617,6 +1760,17 @@ function markAsInStock(id) {
   item.status='In Stock'; item.updatedAt=Date.now();
   scheduleSave(); renderTable(); showToast('Relisted as In Stock ✓');
 }
+function changeName() {
+  const current = localStorage.getItem('sc_username') || 'Samuel';
+  const name = prompt('Enter your name:', current);
+  if (name && name.trim()) {
+    localStorage.setItem('sc_username', name.trim());
+    renderDashboard();
+    showToast('Name updated to ' + name.trim() + ' ✓');
+  }
+  closeSidebar();
+}
+
 function clearAllData() {
   // Reset checkbox state each time
   document.getElementById('clear-checkbox').checked = false;
@@ -1674,32 +1828,73 @@ function renderDashboard() {
   const listedNow  = active.filter(i=>i.status==='Listed').length;
 
   // ── BANNER ──
+  // Count-up helper
+  function countUp(el, target, prefix='£', duration=700) {
+    if (!el) return;
+    const start = Date.now();
+    const tick = () => {
+      const p = Math.min((Date.now()-start)/duration,1);
+      const ease = 1-Math.pow(1-p,3);
+      const val = Math.round(target*ease);
+      el.textContent = prefix + val.toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // Greeting
+  const greetHour = new Date().getHours();
+  const greetWord = greetHour < 12 ? 'Good morning' : greetHour < 17 ? 'Good afternoon' : 'Good evening';
+  const greetEl = document.getElementById('greeting-bar');
+  if (greetEl) {
+    const userName = localStorage.getItem('sc_username') || 'Samuel';
+    greetEl.innerHTML = `<div class="greeting-time-lbl">${greetWord}</div><div class="greeting-name">${esc(userName)} <span style="font-family:sans-serif">👋</span></div>`;
+  }
+
   document.getElementById('dash-banner').innerHTML = `
-    <div style="background:var(--banner-bg);border:1px solid var(--banner-border);border-radius:12px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;">
-      <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:3em;opacity:0.08;color:var(--accent)">◈</div>
-      <div style="font-size:0.66em;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:var(--accent);margin-bottom:6px">All-Time Performance</div>
-      <div style="font-family:'Nunito',sans-serif;font-size:2.4em;font-weight:900;line-height:1;">£${realProfit.toFixed(0)} <span style="font-size:0.42em;color:var(--muted);font-family:'Inter',sans-serif;font-weight:400">profit</span></div>
-      <div style="font-size:0.74em;color:var(--muted);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap;">
-        <span>Revenue <b style="color:var(--success)">£${revenue.toFixed(0)}</b></span>
-        <span>Cost <b style="color:var(--accent2)">£${allCost.toFixed(0)}</b></span>
-        <span>Margin <b style="color:var(--success)">${margin}%</b></span>
+    <div style="background:linear-gradient(135deg,rgba(var(--accent-rgb,181,123,255),0.08) 0%,var(--surface) 100%);border:1px solid rgba(var(--accent-rgb,181,123,255),0.15);border-radius:20px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(var(--accent-rgb,181,123,255),0.12) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;bottom:-20px;left:-10px;width:80px;height:80px;background:radial-gradient(circle,rgba(var(--success-rgb,68,255,136),0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="font-size:0.63em;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;color:var(--accent);margin-bottom:8px;opacity:0.8">All-Time Performance</div>
+      <div style="font-family:'Syne',sans-serif;font-size:2.6em;font-weight:800;line-height:1;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"><span data-countup>£${realProfit.toFixed(0)}</span></div>
+      <div style="font-size:0.7em;color:var(--muted);margin-top:4px;margin-bottom:14px;font-family:'DM Mono',monospace;">total profit earned</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Revenue</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--success)">£${revenue.toFixed(0)}</div></div>
+        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Cost</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2)">£${allCost.toFixed(0)}</div></div>
+        <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Margin</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--accent)">${margin}%</div></div>
       </div>
     </div>`;
 
   // ── 4 TILES ──
   const tile = (barCol, lbl, val, valCol, badge, badgeCol) => `
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${barCol},transparent)"></div>
-      <div style="font-size:0.64em;text-transform:uppercase;letter-spacing:0.09em;font-weight:700;color:var(--muted);margin-bottom:8px;margin-top:6px">${lbl}</div>
-      <div style="font-family:'Nunito',sans-serif;font-size:1.6em;font-weight:900;line-height:1;color:${valCol}">${val}</div>
-      <div style="display:inline-block;font-size:0.62em;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px;font-family:'DM Mono',monospace;background:var(--surface2);color:${badgeCol}">${badge}</div>
+      <div style="font-size:0.62em;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;color:var(--muted);margin-bottom:10px;margin-top:6px">${lbl}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:1.75em;font-weight:800;line-height:1;color:${valCol}">${val}</div>
+      <div style="display:inline-block;font-size:0.6em;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:8px;font-family:'DM Mono',monospace;background:var(--surface2);color:${badgeCol}">${badge}</div>
     </div>`;
 
+  // Helper to animate tiles after render
+  setTimeout(() => {
+    document.querySelectorAll('[data-countup-val]').forEach(el => {
+      const target = parseFloat(el.dataset.countupVal)||0;
+      const prefix = el.dataset.countupPrefix||'';
+      const start = Date.now();
+      const tick = () => {
+        const p = Math.min((Date.now()-start)/600,1);
+        const ease = 1-Math.pow(1-p,3);
+        el.textContent = prefix + (Number.isInteger(target) ? Math.round(target*ease) : (target*ease).toFixed(0));
+        if (p<1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }, 100);
+
   document.getElementById('dash-tiles').innerHTML =
-    tile('var(--accent)',  'Active Stock', active.length,    'var(--accent)',  listedNow+' listed',       'var(--accent)') +
-    tile('var(--success)', 'Stock Value',  '£'+curListVal.toFixed(0), 'var(--success)', 'at list price', 'var(--success)') +
-    tile('var(--sold)',    'Items Sold',   sold.length,      'var(--sold)',    'all time',                'var(--sold)') +
-    tile('var(--danger)',  'Low Stock',    lowStock.length,  'var(--danger)',  'needs restock',           'var(--danger)');
+    tile('var(--accent)',  'Active Stock', `<span data-countup-val="${active.length}">0</span>`,    'var(--accent)',  listedNow+' listed',       'var(--accent)') +
+    tile('var(--success)', 'Stock Value',  `<span data-countup-val="${curListVal.toFixed(0)}" data-countup-prefix="£">£0</span>`, 'var(--success)', 'at list price', 'var(--success)') +
+    tile('var(--sold)',    'Items Sold',   `<span data-countup-val="${sold.length}">0</span>`,      'var(--sold)',    'all time',                'var(--sold)') +
+    tile('var(--danger)',  'Low Stock',    `<span data-countup-val="${lowStock.length}">0</span>`,  'var(--danger)',  'needs restock',           'var(--danger)');
 
   // ── TOP STOCK LIST ──
   const topItems = [...active].sort((a,b)=>(parseFloat(b.price)||0)-(parseFloat(a.price)||0)).slice(0,5);
@@ -1745,6 +1940,12 @@ function renderDashboard() {
         <div style="height:100%;border-radius:2px;width:${Math.round(count/max*100)}%;background:${color}"></div>
       </div>
     </div>`;
+
+  // Trigger count-up on visible numbers after render
+  setTimeout(() => {
+    const profitEl = document.querySelector('#dash-banner [data-countup]');
+    if (profitEl) countUp(profitEl, realProfit, '£');
+  }, 50);
 
   document.getElementById('dash-breakdowns').innerHTML = `
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;">
@@ -1820,6 +2021,64 @@ function parseCSVLine(line){
   r.push(c); return r;
 }
 
+
+// ── RIPPLE ───────────────────────────────────────────────────
+function addRipple(e, btn) {
+  const r = document.createElement('span');
+  r.className = 'ripple-wave';
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;left:${(e.clientX||rect.left+rect.width/2)-rect.left-size/2}px;top:${(e.clientY||rect.top+rect.height/2)-rect.top-size/2}px;`;
+  btn.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+
+// ── SWIPE TO DELETE ──────────────────────────────────────────
+function initSwipeToDelete() {
+  document.querySelectorAll('.m-card-swipe-wrap').forEach(wrap => {
+    const card = wrap.querySelector('.m-card');
+    const id   = card.dataset.id;
+    if (!card || !id) return;
+    let startX = 0, startY = 0, dragging = false, swiped = false;
+    card.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      dragging = true;
+    }, {passive:true});
+    card.addEventListener('touchmove', e => {
+      if (!dragging) return;
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+      if (Math.abs(dy) > Math.abs(dx)) { dragging=false; return; }
+      if (dx < 0) card.style.transform = `translateX(${Math.max(dx,-85)}px)`;
+    }, {passive:true});
+    card.addEventListener('touchend', e => {
+      if (!dragging) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (dx < -50) {
+        card.style.transform = 'translateX(-85px)';
+        card.style.transition = 'transform 0.2s';
+        swiped = true;
+      } else {
+        card.style.transform = 'translateX(0)';
+        card.style.transition = 'transform 0.2s';
+        swiped = false;
+      }
+      dragging = false;
+      setTimeout(() => card.style.transition = '', 200);
+    }, {passive:true});
+    // Tap on card when swiped = close
+    card.addEventListener('click', () => {
+      if (swiped) {
+        card.style.transform='translateX(0)';
+        card.style.transition='transform 0.2s';
+        swiped=false;
+        setTimeout(()=>card.style.transition='',200);
+      }
+    });
+  });
+}
+
 // ── UTIL ─────────────────────────────────────────────────────
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
@@ -1832,6 +2091,27 @@ document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();manualSave();}
 });
 window.addEventListener('beforeunload',e=>{ if(unsavedChanges){e.preventDefault();e.returnValue='';} });
+
+
+// ── ACTION SHEET ─────────────────────────────────────────────
+let currentSheetId = null;
+let longPressTimer = null;
+
+function startCardLongPress(e, id, name) {
+  longPressTimer = setTimeout(() => {
+    if (navigator.vibrate) navigator.vibrate(18);
+    currentSheetId = id;
+    document.getElementById('sheet-item-name').textContent = name;
+    document.getElementById('action-sheet-overlay').classList.add('open');
+  }, 500);
+}
+function cancelCardLongPress() {
+  clearTimeout(longPressTimer);
+}
+function closeActionSheet() {
+  document.getElementById('action-sheet-overlay').classList.remove('open');
+  currentSheetId = null;
+}
 
 // ── BACK BUTTON HANDLING ─────────────────────────────────────
 window.addEventListener('popstate', e => {
@@ -1886,11 +2166,17 @@ if (screen.orientation && screen.orientation.lock) {
 }
 
 (async()=>{
+  // Ask for name on first launch
+  if (!localStorage.getItem('sc_username')) {
+    const name = prompt('Welcome to SamCreation! Enter your name:');
+    if (name && name.trim()) localStorage.setItem('sc_username', name.trim());
+  }
   try { loadPrefs(); } catch(e) {}
   try { await loadInventory(); } catch(e) { inventory = []; }
   try { renderTable(); } catch(e) {}
   try { renderDashboard(); } catch(e) { console.error('Dashboard render error:', e); }
   try { initPhotoInput(); } catch(e) {}
+  try { initSwipeToDelete(); } catch(e) {}
 })();
 </script>
 </body>
