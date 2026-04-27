@@ -1022,6 +1022,10 @@ function showPage(page, el) {
   });
   const bnActive = document.getElementById('bn-'+page);
   if (bnActive) bnActive.style.color = 'var(--accent)';
+  // Push history state so Android back button navigates within app
+  if (history.state?.page !== page) {
+    history.pushState({ page }, '', '');
+  }
   closeSidebar();
 }
 function filterByStatus(status, el) {
@@ -1715,7 +1719,39 @@ document.addEventListener('keydown',e=>{
 });
 window.addEventListener('beforeunload',e=>{ if(unsavedChanges){e.preventDefault();e.returnValue='';} });
 
-// ── SWIPE TO CLOSE DRAWER ────────────────────────────────────
+// ── BACK BUTTON HANDLING ─────────────────────────────────────
+window.addEventListener('popstate', e => {
+  // If any modal is open, close it instead of navigating
+  const openModal = document.querySelector('.modal-overlay.open');
+  if (openModal) {
+    openModal.classList.remove('open');
+    history.pushState(e.state || { page: 'dashboard' }, '', '');
+    return;
+  }
+  // If sidebar is open, close it
+  if (document.getElementById('sidebar').classList.contains('drawer-open')) {
+    closeSidebar();
+    history.pushState(e.state || { page: 'dashboard' }, '', '');
+    return;
+  }
+  // Navigate to the page stored in history state
+  const page = e.state?.page || 'dashboard';
+  const navEl = document.querySelector(`.nav-item[onclick*="'${page}'"]`);
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  ['bn-dashboard','bn-inventory'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) b.style.color = 'var(--muted)';
+  });
+  const bnActive = document.getElementById('bn-' + page);
+  if (bnActive) bnActive.style.color = 'var(--accent)';
+  if (page === 'dashboard') { renderDashboard(); restoreSectionStates(); }
+});
+
+// Seed initial history state
+history.replaceState({ page: 'dashboard' }, '', '');
 (function() {
   let startX = 0;
   const sidebar = document.getElementById('sidebar') || document.querySelector('.sidebar');
