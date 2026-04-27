@@ -96,7 +96,7 @@
   body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.2s,color 0.2s; line-height:1.5; }
 
   header { display:flex; align-items:center; justify-content:space-between; padding:0.7em 0.8em; padding-top:calc(0.7em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:rgba(var(--surface-rgb,17,17,24),0.82); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); position:sticky; top:0; z-index:90; gap:6px; flex-wrap:nowrap; }
-  .logo { font-size:13px; font-weight:800; letter-spacing:-0.02em; white-space:nowrap; font-family:'Syne',sans-serif; flex-shrink:0; padding:8px 0; line-height:1; }
+  .logo { font-size:0.87em; font-weight:800; letter-spacing:-0.02em; white-space:nowrap; font-family:'Syne',sans-serif; flex-shrink:0; padding:8px 0; line-height:1; }
 
   .header-stats { display:flex; gap:1.4em; font-family:'Inter',sans-serif; font-size:0.78em; color:var(--muted); }
   .header-stats b { color:var(--accent); font-weight:600; }
@@ -291,11 +291,8 @@
   .skel-thumb { width:80px; height:80px; flex-shrink:0; border-radius:8px; }
   .skel-line  { height:13px; margin-bottom:8px; }
 
-  /* Swipe to delete */
-  .m-card-swipe-wrap { position:relative; overflow:hidden; border-radius:10px; margin-bottom:10px; }
-  .m-card-delete-bg  { position:absolute; right:0; top:0; bottom:0; background:var(--danger); display:flex; align-items:center; padding:0 22px; color:#fff; font-weight:800; font-size:0.82em; gap:6px; pointer-events:none; }
-  .m-card { margin-bottom:0; border-radius:10px; touch-action:pan-y; cursor:default; will-change:transform; }
-  .m-card.swiped { transform:translateX(-80px) !important; }
+  .m-card-swipe-wrap { margin-bottom:10px; border-radius:10px; overflow:hidden; }
+  .m-card { border-radius:10px; touch-action:pan-y; cursor:default; }
 
   .modal-title { font-size:1.25em; font-weight:800; margin-bottom:1.4em; letter-spacing:-0.01em; font-family:'Nunito',sans-serif; }
   .modal-close { position:absolute; top:16px; right:18px; background:none; border:none; color:var(--muted); font-size:1.4em; cursor:pointer; line-height:1; padding:4px; }
@@ -485,7 +482,7 @@
   @media (max-width: 768px) {
     /* Header */
     header { padding:0.6em 1em; }
-    header .logo { font-size:13px; }
+    header .logo { font-size:0.87em; }
 
     /* App layout: no sidebar column, full width */
     .app { grid-template-columns:1fr; min-height:calc(100vh - 112px); }
@@ -669,6 +666,15 @@
     <div class="nav-item" onclick="filterByStatus('Low Stock',this)"><span class="icon">🔴</span> <span class="nav-label">Low Stock</span></div>
 
     <div class="sidebar-section" style="margin-top:auto">Data</div>
+    <div style="margin:8px 12px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;">
+      <div style="font-size:0.7em;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:10px;font-family:'Inter',sans-serif;">🔤 Font Size</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button onclick="adjustFont(-0.1)" style="width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">−</button>
+        <input type="range" id="font-slider" min="0.7" max="1.4" step="0.05" value="1" oninput="setFontSize(this.value)" style="flex:1;accent-color:var(--accent);cursor:pointer;">
+        <button onclick="adjustFont(0.1)" style="width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">+</button>
+      </div>
+      <div style="text-align:center;font-size:0.68em;color:var(--muted);margin-top:6px;font-family:'DM Mono',monospace;" id="font-size-label">100%</div>
+    </div>
     <div class="nav-item" onclick="manualSave()"
       style="margin:8px 12px;background:rgba(68,255,136,0.12);border:1px solid rgba(68,255,136,0.3);border-radius:6px;color:var(--success);font-weight:800;border-left:3px solid var(--success);padding:11px 16px"
       onmouseover="this.style.background='rgba(68,255,136,0.22)'"
@@ -1010,14 +1016,26 @@ document.addEventListener('click', e => {
 });
 
 function setFontSize(v) {
+  v = Math.min(1.4, Math.max(0.7, parseFloat(v)));
   document.documentElement.style.setProperty('--font-scale', v);
   localStorage.setItem('sc_fontsize', v);
+  // Update slider and label
+  const slider = document.getElementById('font-slider');
+  const label = document.getElementById('font-size-label');
+  if (slider) slider.value = v;
+  if (label) label.textContent = Math.round(v * 100) + '%';
+  // Bottom nav stays fixed size
+  const nav = document.getElementById('bottom-nav');
+  if (nav) nav.style.fontSize = '0.62em';
+}
+function adjustFont(delta) {
+  const current = parseFloat(localStorage.getItem('sc_fontsize') || '1');
+  setFontSize(current + delta);
 }
 function loadPrefs() {
   const t = localStorage.getItem('sc_theme') || 'volt';
-  const s = localStorage.getItem('sc_fontsize') || '1';
+  const s = parseFloat(localStorage.getItem('sc_fontsize') || '1');
   setTheme(t);
-
   setFontSize(s);
   if (window.innerWidth > 768 && localStorage.getItem('sc_sidebar_collapsed') === 'true') {
     document.body.classList.add('sidebar-collapsed');
@@ -1275,7 +1293,6 @@ function renderMobileCards(items) {
            <span style="font-family:'Nunito',sans-serif;font-weight:900;font-size:0.82em;color:var(--text);line-height:1.2;word-break:break-word;">${esc(item.name||'Item')}</span>
          </div>`;
     return `<div class="m-card-swipe-wrap">
-      <div class="m-card-delete-bg">🗑 Delete</div>
       <div class="m-card" data-id="${item.id}" data-status="${item.status}" style="padding:14px;background:var(--surface);"
         ontouchstart="startCardLongPress(event,'${item.id}','${esc(item.name||'Item')}')"
         ontouchend="cancelCardLongPress()" ontouchmove="cancelCardLongPress()">
@@ -1314,7 +1331,6 @@ function renderMobileCards(items) {
         card.style.animationDelay = `${i * 0.06}s`;
         card.classList.add('visible');
       });
-      initSwipeToDelete();
     });
   }, 180);
 }
@@ -2181,7 +2197,6 @@ if (screen.orientation && screen.orientation.lock) {
   try { renderTable(); } catch(e) {}
   try { renderDashboard(); } catch(e) { console.error('Dashboard render error:', e); }
   try { initPhotoInput(); } catch(e) {}
-  try { initSwipeToDelete(); } catch(e) {}
 })();
 </script>
 </body>
