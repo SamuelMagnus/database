@@ -1,7 +1,7 @@
 // SamCreation Service Worker
 // Caches the app shell for offline use
 
-const CACHE = 'samcreation-v1';
+const CACHE = 'samcreation-v2';
 const SHELL = [
   './',
   './index.html',
