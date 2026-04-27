@@ -664,6 +664,7 @@
         </div>
         <div class="photo-preview-grid" id="photo-preview-grid"></div>
       </div>
+    </div><!-- end form-grid -->
     <div class="form-actions">
       <button class="btn btn-ghost" onclick="closeModal('item-modal')">Cancel</button>
       <button class="btn btn-accent" onclick="saveItem()">Save Item</button>
@@ -893,7 +894,8 @@ function loadPrefs() {
   const t = localStorage.getItem('sc_theme') || 'volt';
   const s = localStorage.getItem('sc_fontsize') || '1';
   setTheme(t);
-  document.getElementById('font-slider').value = s;
+  const slider = document.getElementById('font-slider');
+  if (slider) slider.value = s;
   setFontSize(s);
   if (window.innerWidth > 768 && localStorage.getItem('sc_sidebar_collapsed') === 'true') {
     document.body.classList.add('sidebar-collapsed');
@@ -1093,9 +1095,9 @@ function renderTable() {
 
   const total=inventory.length, listed=inventory.filter(i=>i.status==='Listed').length;
   const val=inventory.reduce((s,i)=>s+(parseFloat(i.price)||0)*(parseInt(i.qty)||1),0);
-  document.getElementById('hdr-total').textContent=total;
-  document.getElementById('hdr-listed').textContent=listed;
-  document.getElementById('hdr-value').textContent='£'+val.toFixed(2);
+  const hdrTotal = document.getElementById('hdr-total'); if(hdrTotal) hdrTotal.textContent=total;
+  const hdrListed = document.getElementById('hdr-listed'); if(hdrListed) hdrListed.textContent=listed;
+  const hdrValue = document.getElementById('hdr-value'); if(hdrValue) hdrValue.textContent='£'+val.toFixed(2);
   document.getElementById('nav-inventory-count').textContent=total;
   renderMobileCards(items);
   renderInStock();
