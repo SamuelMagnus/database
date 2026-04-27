@@ -670,6 +670,16 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// Kill any cached service worker immediately — must be first
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
+  });
+  // Also clear all caches
+  if (window.caches) {
+    caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+  }
+}
 let inventory = [], editingId = null, activeStatusFilter = 'all';
 let saveTimer = null, unsavedChanges = false, pendingSellId = null;
 let fileHandle = null; // File System Access API handle
@@ -1432,14 +1442,6 @@ window.addEventListener('beforeunload',e=>{ if(unsavedChanges){e.preventDefault(
     }
   }, { passive: true });
 })();
-
-// ── SERVICE WORKER REGISTRATION ──────────────────────────────
-// Unregister any old service workers that may be caching stale files
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(r => r.unregister());
-  });
-}
 
 // ── LOCK TO PORTRAIT ─────────────────────────────────────────
 if (screen.orientation && screen.orientation.lock) {
