@@ -188,6 +188,7 @@
   .status-listed    { background:rgba(232,255,71,0.12);   color:var(--accent); }
   .status-sold      { background:rgba(255,107,53,0.12);   color:var(--accent2); }
   .status-low-stock { background:rgba(255,165,0,0.12);    color:orange; }
+  .status-vinted    { background:rgba(0,180,120,0.12);    color:#00b478; }
   [data-theme="chalk"] .status-in-stock,[data-theme="blossom"] .status-in-stock,
   [data-theme="sage"] .status-in-stock,[data-theme="arctic"] .status-in-stock,
   [data-theme="dusk"] .status-in-stock { background:rgba(26,154,80,0.1); }
@@ -662,6 +663,7 @@
     <div class="nav-item" onclick="filterByStatus('all',this)"><span class="icon">🔘</span> <span class="nav-label">All Items</span></div>
     <div class="nav-item" onclick="filterByStatus('In Stock',this)"><span class="icon">🟢</span> <span class="nav-label">In Stock</span></div>
     <div class="nav-item" onclick="filterByStatus('Listed',this)"><span class="icon">🟡</span> <span class="nav-label">Listed on eBay</span></div>
+    <div class="nav-item" onclick="filterByStatus('Vinted',this)"><span class="icon">🟢</span> <span class="nav-label">Listed on Vinted</span></div>
     <div class="nav-item" onclick="filterByStatus('Sold',this)"><span class="icon">🟠</span> <span class="nav-label">Sold</span></div>
     <div class="nav-item" onclick="filterByStatus('Low Stock',this)"><span class="icon">🔴</span> <span class="nav-label">Low Stock</span></div>
 
@@ -772,7 +774,7 @@
         <select id="f-condition"><option>New</option><option>New (open box)</option><option>Used – Like New</option><option>Used – Good</option><option>Used – Acceptable</option><option>For Parts</option></select>
       </div>
       <div class="form-group"><label>Status</label>
-        <select id="f-status"><option value="In Stock">In Stock</option><option value="Listed">Listed on eBay</option><option value="Sold">Sold</option><option value="Low Stock">Low Stock</option></select>
+        <select id="f-status"><option value="Listed">Listed on eBay</option><option value="Vinted">Listed on Vinted</option><option value="Sold">Sold</option></select>
       </div>
       <div class="form-group"><label>Date Acquired</label><input type="date" id="f-date"></div>
       <div class="form-group full"><label>Tags (comma separated)</label><input type="text" id="f-tags" placeholder="vintage, watch, japan"></div>
@@ -1181,7 +1183,7 @@ function filterByStatus(status, el) {
 }
 
 const CAT_CLASSES = {'Electronics':'cat-electronics','Clothing':'cat-clothing','Collectibles':'cat-collectibles','Home & Garden':'cat-home','Sports':'cat-sports','Toys & Games':'cat-toys','Books':'cat-books','Other':'cat-other'};
-const STATUS_CLASSES = {'In Stock':'status-in-stock','Listed':'status-listed','Sold':'status-sold','Low Stock':'status-low-stock'};
+const STATUS_CLASSES = {'In Stock':'status-in-stock','Listed':'status-listed','Vinted':'status-vinted','Sold':'status-sold','Low Stock':'status-low-stock'};
 function catTag(c)   { return `<span class="category-tag ${CAT_CLASSES[c]||'cat-other'}">${c||'Other'}</span>`; }
 function statusTag(s){ return `<span class="status-tag ${STATUS_CLASSES[s]||'status-in-stock'}">${s||'In Stock'}</span>`; }
 function fmt(v)      { const n=parseFloat(v); return isNaN(n)?'—':'£'+n.toFixed(2); }
@@ -1482,7 +1484,7 @@ function editItem(id) {
 function clearForm() {
   ['f-name','f-desc','f-sku','f-location','f-cost','f-price','f-url','f-tags','f-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-qty').value=1; document.getElementById('f-cat').value='Other';
-  document.getElementById('f-condition').value='Used – Good'; document.getElementById('f-status').value='In Stock';
+  document.getElementById('f-condition').value='Used – Good'; document.getElementById('f-status').value='Listed';
   currentPhotos = []; renderPhotoPreview();
   const lbl = document.getElementById('photo-upload-label');
   if (lbl) lbl.textContent = 'Tap to add photos';
@@ -1953,7 +1955,7 @@ function renderDashboard() {
   });
   const maxC = Math.max(...Object.values(cc),1);
   const maxS = Math.max(...Object.values(sc),1);
-  const statusColors = {'In Stock':'var(--success)','Listed':'var(--accent)','Sold':'var(--sold)','Low Stock':'var(--danger)'};
+  const statusColors = {'In Stock':'var(--success)','Listed':'var(--accent)','Vinted':'#00b478','Sold':'var(--sold)','Low Stock':'var(--danger)'};
 
   const barRow = (name, count, max, color) => `
     <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
