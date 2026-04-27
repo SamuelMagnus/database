@@ -14,19 +14,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap');
 
-  /* ── PORTRAIT LOCK ── */
-  @media screen and (orientation: landscape) and (max-height: 600px) {
-    html {
-      transform: rotate(-90deg);
-      transform-origin: left top;
-      width: 100vh;
-      height: 100vw;
-      overflow-x: hidden;
-      position: absolute;
-      top: 100%;
-      left: 0;
-    }
-  }
+  /* Portrait lock handled by manifest.json */
 
   :root {
     --bg:#0f0f0f; --surface:#181818; --surface2:#222222; --border:#2e2e2e;
