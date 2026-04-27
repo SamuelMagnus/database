@@ -93,13 +93,13 @@
   html { font-size:calc(15px * var(--font-scale)); }
   body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.2s,color 0.2s; line-height:1.5; }
 
-  header { display:flex; align-items:center; justify-content:space-between; padding:0.8em 1em; padding-top:calc(0.8em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:rgba(var(--surface-rgb,17,17,24),0.82); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); position:sticky; top:0; z-index:90; gap:10px; flex-wrap:nowrap; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:0.7em 0.8em; padding-top:calc(0.7em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:rgba(var(--surface-rgb,17,17,24),0.82); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); position:sticky; top:0; z-index:90; gap:6px; flex-wrap:nowrap; overflow:hidden; }
   .logo { font-size:1.1em; font-weight:800; letter-spacing:-0.02em; white-space:nowrap; font-family:'Syne',sans-serif; }
 
   .header-stats { display:flex; gap:1.4em; font-family:'Inter',sans-serif; font-size:0.78em; color:var(--muted); }
   .header-stats b { color:var(--accent); font-weight:600; }
 
-  .save-indicator { font-family:'Inter',sans-serif; font-size:0.72em; padding:4px 10px; border-radius:20px; transition:all 0.3s; white-space:nowrap; font-weight:600; }
+  .save-indicator { font-family:'Inter',sans-serif; font-size:0.66em; padding:4px 8px; border-radius:20px; transition:all 0.3s; white-space:nowrap; font-weight:600; }
   .save-indicator.saved   { background:rgba(68,255,136,0.12); color:var(--success); }
   .save-indicator.saving  { background:rgba(232,255,71,0.12);  color:var(--accent); }
   .save-indicator.unsaved { background:rgba(255,68,68,0.12);   color:var(--danger); }
@@ -396,7 +396,7 @@
 
   /* ── THEME PICKER ── */
   .theme-picker-wrap { position:relative; }
-  .theme-picker-btn { display:flex; align-items:center; gap:6px; background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 12px; cursor:pointer; font-family:'Inter',sans-serif; font-size:0.75em; font-weight:700; color:var(--text); transition:all 0.15s; white-space:nowrap; }
+  .theme-picker-btn { display:flex; align-items:center; gap:4px; background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 10px; cursor:pointer; font-family:'Inter',sans-serif; font-size:0.68em; font-weight:700; color:var(--text); transition:all 0.15s; white-space:nowrap; }
   .theme-picker-btn:hover { border-color:var(--accent); }
   .theme-picker-swatch { width:14px; height:14px; border-radius:50%; border:1px solid rgba(128,128,128,0.3); flex-shrink:0; }
   .theme-picker-dropdown { display:none; position:fixed; top:70px; left:50%; transform:translateX(-50%); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px; z-index:500; box-shadow:0 8px 32px rgba(0,0,0,0.4); width:260px; max-width:calc(100vw - 24px); }
@@ -577,7 +577,7 @@
   <button class="sidebar-toggle" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
   <div class="logo"><span style="background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Sam</span>Creation</div>
   <span class="save-indicator unsaved" id="save-indicator" style="margin-left:auto;margin-right:auto">● UNSAVED</span>
-  <button onclick="addRipple(event,this);openAddModal()" style="background:var(--accent);color:#111;border:none;border-radius:20px;padding:5px 12px;font-size:0.72em;font-weight:800;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;flex-shrink:0;position:relative;overflow:hidden;">+ Add</button>
+  <button onclick="addRipple(event,this);openAddModal()" style="background:var(--accent);color:#111;border:none;border-radius:20px;padding:4px 10px;font-size:0.68em;font-weight:800;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;flex-shrink:0;position:relative;overflow:hidden;">+ Add</button>
   <div class="theme-picker-wrap" id="theme-picker-wrap">
     <button class="theme-picker-btn" onclick="toggleThemePicker()" id="theme-picker-btn">
       🎨 Theme ▾
@@ -1017,8 +1017,7 @@ function loadPrefs() {
   const t = localStorage.getItem('sc_theme') || 'volt';
   const s = localStorage.getItem('sc_fontsize') || '1';
   setTheme(t);
-  const slider = document.getElementById('font-slider');
-  if (slider) slider.value = s;
+
   setFontSize(s);
   if (window.innerWidth > 768 && localStorage.getItem('sc_sidebar_collapsed') === 'true') {
     document.body.classList.add('sidebar-collapsed');
@@ -1854,7 +1853,7 @@ function renderDashboard() {
       <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(var(--accent-rgb,181,123,255),0.12) 0%,transparent 70%);pointer-events:none;"></div>
       <div style="position:absolute;bottom:-20px;left:-10px;width:80px;height:80px;background:radial-gradient(circle,rgba(var(--success-rgb,68,255,136),0.06) 0%,transparent 70%);pointer-events:none;"></div>
       <div style="font-size:0.63em;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;color:var(--accent);margin-bottom:8px;opacity:0.8">All-Time Performance</div>
-      <div style="font-family:'Syne',sans-serif;font-size:2.6em;font-weight:800;line-height:1;letter-spacing:-0.03em;color:var(--text);">£<span id="profit-countup" style="font-family:'Syne',sans-serif;">${realProfit.toFixed(0)}</span></div>
+      <div style="font-family:'Syne',sans-serif;font-size:2.4em;font-weight:800;line-height:1;letter-spacing:-0.03em;color:var(--text);">£<span id="profit-countup" style="font-family:inherit;">${realProfit.toFixed(0)}</span></div>
       <div style="font-size:0.7em;color:var(--muted);margin-top:4px;margin-bottom:14px;font-family:'DM Mono',monospace;">total profit earned</div>
       <div style="display:flex;gap:20px;flex-wrap:wrap;">
         <div><div style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;font-weight:600">Revenue</div><div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--success)">£${revenue.toFixed(0)}</div></div>
@@ -1868,12 +1867,12 @@ function renderDashboard() {
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${barCol},transparent)"></div>
       <div style="font-size:0.62em;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;color:var(--muted);margin-bottom:10px;margin-top:6px">${lbl}</div>
-      <div style="font-family:'Syne',sans-serif !important;font-size:1.75em;font-weight:800;line-height:1;color:${valCol};letter-spacing:-0.02em;">${val}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:1.75em;font-weight:800;line-height:1;color:${valCol};letter-spacing:-0.02em;font-display:block;">${val}</div>
       <div style="display:inline-block;font-size:0.6em;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:8px;font-family:'DM Mono',monospace;background:var(--surface2);color:${badgeCol}">${badge}</div>
     </div>`;
 
-  // Helper to animate tiles after render
-  setTimeout(() => {
+  // Helper to animate tiles after render — wait for font to load
+  const runTileCountup = () => {
     document.querySelectorAll('[data-countup-val]').forEach(el => {
       const target = parseFloat(el.dataset.countupVal)||0;
       const prefix = el.dataset.countupPrefix||'';
@@ -1888,13 +1887,18 @@ function renderDashboard() {
       };
       requestAnimationFrame(tick);
     });
-  }, 100);
+  };
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(runTileCountup);
+  } else {
+    setTimeout(runTileCountup, 300);
+  }
 
   document.getElementById('dash-tiles').innerHTML =
-    tile('var(--accent)',  'Active Stock', `<span data-countup-val="${active.length}">0</span>`,    'var(--accent)',  listedNow+' listed',       'var(--accent)') +
-    tile('var(--success)', 'Stock Value',  `<span data-countup-val="${curListVal.toFixed(0)}" data-countup-prefix="£">£0</span>`, 'var(--success)', 'at list price', 'var(--success)') +
-    tile('var(--sold)',    'Items Sold',   `<span data-countup-val="${sold.length}">0</span>`,      'var(--sold)',    'all time',                'var(--sold)') +
-    tile('var(--danger)',  'Low Stock',    `<span data-countup-val="${lowStock.length}">0</span>`,  'var(--danger)',  'needs restock',           'var(--danger)');
+    tile('var(--accent)',  'Active Stock', `<span data-countup-val="${active.length}" style="font-family:'Syne',sans-serif;font-weight:800;">0</span>`,    'var(--accent)',  listedNow+' listed',       'var(--accent)') +
+    tile('var(--success)', 'Stock Value',  `<span data-countup-val="${curListVal.toFixed(0)}" data-countup-prefix="£" style="font-family:'Syne',sans-serif;font-weight:800;">£0</span>`, 'var(--success)', 'at list price', 'var(--success)') +
+    tile('var(--sold)',    'Items Sold',   `<span data-countup-val="${sold.length}" style="font-family:'Syne',sans-serif;font-weight:800;">0</span>`,      'var(--sold)',    'all time',                'var(--sold)') +
+    tile('var(--danger)',  'Low Stock',    `<span data-countup-val="${lowStock.length}" style="font-family:'Syne',sans-serif;font-weight:800;">0</span>`,  'var(--danger)',  'needs restock',           'var(--danger)');
 
   // ── TOP STOCK LIST ──
   const topItems = [...active].sort((a,b)=>(parseFloat(b.price)||0)-(parseFloat(a.price)||0)).slice(0,5);
@@ -1942,10 +1946,11 @@ function renderDashboard() {
     </div>`;
 
   // Trigger count-up on visible numbers after render
-  setTimeout(() => {
+  const runProfitCountup = () => {
     const profitEl = document.getElementById('profit-countup');
-    if (profitEl) { const t=realProfit; const s=Date.now(); const tick=()=>{const p=Math.min((Date.now()-s)/700,1);const e=1-Math.pow(1-p,3);profitEl.textContent=Math.round(t*e).toLocaleString();if(p<1)requestAnimationFrame(tick);}; requestAnimationFrame(tick); }
-  }, 50);
+    if (profitEl) { const t=realProfit; const s=Date.now(); const tick=()=>{const p=Math.min((Date.now()-s)/700,1);const e=1-Math.pow(1-p,3);profitEl.textContent='£'+Math.round(t*e).toLocaleString();if(p<1)requestAnimationFrame(tick);}; requestAnimationFrame(tick); }
+  };
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(runProfitCountup); } else { setTimeout(runProfitCountup, 300); }
 
   document.getElementById('dash-breakdowns').innerHTML = `
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;">
