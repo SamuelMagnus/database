@@ -213,7 +213,7 @@
   input, textarea, select { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-family:'Inter',sans-serif; font-size:0.92em; padding:10px 12px; outline:none; width:100%; transition:border-color 0.15s; line-height:1.5; }
   input:focus, textarea:focus, select:focus { border-color:var(--accent); }
   textarea { resize:vertical; min-height:80px; }
-  .form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:1.4em; padding-top:1.2em; border-top:1px solid var(--border); flex-wrap:wrap; }
+  .form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:1.4em; padding-top:1.2em; border-top:1px solid var(--border); flex-wrap:wrap; position:sticky; bottom:0; background:var(--surface); padding-bottom:1em; z-index:10; }
 
   /* SELL MODAL */
   .sell-summary { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:14px 16px; margin-bottom:16px; }
@@ -445,7 +445,11 @@
 
     /* Modals full-screen on mobile */
     .modal-overlay { padding:0; align-items:flex-end; }
-    .modal { border-radius:16px 16px 0 0; max-width:100%; padding:1.4em; max-height:92vh; overflow-y:auto; }
+    .modal { border-radius:16px 16px 0 0; max-width:100%; padding:0; max-height:92vh; overflow-y:hidden; display:flex; flex-direction:column; }
+    #item-modal .modal-title { padding:1.2em 1.4em 0; }
+    #item-modal .form-grid { padding:0 1.4em 100px; overflow-y:auto; flex:1; }
+    #item-modal .form-actions { padding:1em 1.4em; margin:0; border-top:1px solid var(--border); flex-shrink:0; background:var(--surface); }
+    .modal-close { top:12px; right:14px; }
 
     /* Form grid single col on small */
     .form-grid { grid-template-columns:1fr; }
@@ -636,11 +640,11 @@
       <div class="form-group full">
         <div class="calc-row" id="calc-row">
           <span>📊</span>
-          <span id="calc-cost-per">Cost per item: —</span>
+          <span id="calc-cost-per">Total cost: —</span>
           &nbsp;·&nbsp;
-          <span id="calc-price-per">List per item: —</span>
+          <span id="calc-price-per">Total listed: —</span>
           &nbsp;·&nbsp;
-          <span id="calc-margin">Margin per item: —</span>
+          <span id="calc-margin">Margin: —</span>
         </div>
       </div>
       <div class="form-group"><label>eBay Listing URL</label><input type="text" id="f-url" placeholder="https://ebay.co.uk/itm/..."></div>
@@ -664,11 +668,10 @@
         </div>
         <div class="photo-preview-grid" id="photo-preview-grid"></div>
       </div>
-    </div><!-- end form-grid -->
-    <div class="form-actions">
-      <button class="btn btn-ghost" onclick="closeModal('item-modal')">Cancel</button>
-      <button class="btn btn-accent" onclick="saveItem()">Save Item</button>
     </div>
+
+    <button onclick="saveItem()" style="display:block;width:calc(100% - 2.8em);margin:16px 1.4em 0;padding:16px;background:var(--accent);color:#111;border:none;border-radius:10px;font-size:1em;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">💾 Save Item</button>
+    <button onclick="closeModal('item-modal')" style="display:block;width:calc(100% - 2.8em);margin:8px 1.4em 80px;padding:12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;font-size:0.9em;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
   </div>
 </div>
 
