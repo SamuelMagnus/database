@@ -541,7 +541,7 @@
       </div>
     
   </div>
-  <input type="file" id="import-file" accept=".csv" style="display:none" onchange="importCSV(event)">
+  <input type="file" id="import-file" accept=".csv,text/csv,text/plain,application/csv" style="display:none" onchange="importCSV(event)">
 </header>
 
 <div id="drawer-overlay" onclick="closeSidebar();event.stopPropagation();" style="display:none;opacity:0"></div>
@@ -1672,24 +1672,46 @@ function exportCSV() {
   a.click(); URL.revokeObjectURL(a.href);
   showToast(`Exported ${inventory.length} items ✓`);
 }
-function triggerImport(){document.getElementById('import-file').click();}
+function triggerImport() {
+  const inp = document.getElementById('import-file');
+  inp.value = '';
+  inp.click();
+}
 function importCSV(event){
   const file=event.target.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=function(e){
-    const lines=e.target.result.split('\n').filter(l=>l.trim());
-    if(lines.length<2){showToast('CSV empty','error');return;}
+    const text = e.target.result.trim();
+    // Try JSON first
+    if (text.startsWith('[') || text.startsWith('{')) {
+      try {
+        const data = JSON.parse(text);
+        inventory = Array.isArray(data) ? data : [data];
+        idbSet('inventory', inventory);
+        setSaveState('saved'); unsavedChanges = false;
+        renderTable(); renderDashboard();
+        showToast(`Imported ${inventory.length} items from JSON ✓`);
+        return;
+      } catch(err) {}
+    }
+    // Parse CSV
+    const lines=text.split('\n').filter(l=>l.trim());
+    if(lines.length<2){showToast('CSV is empty or invalid','error');return;}
     const headers=lines[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim());
+    if(!headers.includes('name')){showToast('CSV missing name column','error');return;}
     let imported=0;
     for(let i=1;i<lines.length;i++){
       const vals=parseCSVLine(lines[i]);
-      const item={id:generateId(),createdAt:Date.now(),updatedAt:Date.now()};
-      headers.forEach((h,idx)=>{if(h!=='id')item[h]=vals[idx]||'';});
-      if(item.name){inventory.push(item);imported++;}
+      const item={id:generateId(),createdAt:Date.now(),updatedAt:Date.now(),sales:[]};
+      headers.forEach((h,idx)=>{ if(h!=='id') item[h]=vals[idx]||''; });
+      if(item.name){ inventory.push(item); imported++; }
     }
-    scheduleSave();renderTable();showToast(`Imported ${imported} items ✓`);
+    if(imported===0){showToast('No valid items found in CSV','error');return;}
+    scheduleSave();renderTable();renderDashboard();showToast(`Imported ${imported} items ✓`);
   };
-  reader.readAsText(file); event.target.value='';
+  reader.onerror = () => showToast('Could not read file','error');
+  reader.readAsText(file);
+  event.target.value='';
 }
 function parseCSVLine(line){
   const r=[]; let c='',inQ=false;
