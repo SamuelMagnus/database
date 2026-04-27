@@ -245,7 +245,7 @@
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
   ::-webkit-scrollbar-thumb:hover{background:#888;}
 
-  #loading-screen { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; gap:14px; }
+  #loading-screen { display:none !important; }
   #loading-screen .logo { font-size:2em; font-family:'Nunito',sans-serif; }
   .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite; }
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -1449,9 +1449,10 @@ window.addEventListener('beforeunload',e=>{ if(unsavedChanges){e.preventDefault(
 })();
 
 // ── SERVICE WORKER REGISTRATION ──────────────────────────────
+// Unregister any old service workers that may be caching stale files
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
   });
 }
 
@@ -1461,32 +1462,8 @@ if (screen.orientation && screen.orientation.lock) {
 }
 
 (async()=>{
-  const hideLoader = () => {
-    const el = document.getElementById('loading-screen');
-    if (el) el.style.display = 'none';
-  };
-
-  // Safety net — if anything hangs, force-hide after 3 seconds
-  setTimeout(hideLoader, 3000);
-
-  try {
-    // Portrait lock — ignore errors
-    if (screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock('portrait').catch(()=>{});
-    }
-  } catch(e) {}
-
   try { loadPrefs(); } catch(e) {}
-
-  try {
-    await loadInventory();
-  } catch(e) {
-    inventory = [];
-    setSaveState('unsaved');
-  }
-
-  hideLoader();
-
+  try { await loadInventory(); } catch(e) { inventory = []; }
   try { renderTable(); } catch(e) {}
 })();
 </script>
