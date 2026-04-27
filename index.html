@@ -218,7 +218,7 @@
   .card-price-big { font-family:'Syne',sans-serif; font-size:1.35em; font-weight:800; color:var(--accent); line-height:1; }
 
   /* Greeting */
-  .greeting-bar { padding:18px 16px 4px; text-align:center; }
+  .greeting-bar { padding:18px 16px 16px; text-align:center; }
   .greeting-time-lbl { font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); font-weight:600; margin-bottom:3px; }
   .greeting-name { font-family:'Syne',sans-serif; font-size:1.5em; font-weight:800; letter-spacing:-0.02em; display:inline-block; animation:floatAnim 4s ease-in-out infinite; }
 
@@ -726,9 +726,7 @@
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="greeting-bar" id="greeting-bar"></div>
-      <div class="page-header" style="padding-top:8px;">
-        <div><div class="page-title">Dashboard</div><div class="page-sub">Your inventory at a glance</div></div>
-      </div>
+
       <div id="dash-banner"></div>
       <div id="dash-tiles" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px"></div>
       <div id="dash-stock-list" style="margin-bottom:14px"></div>
@@ -1870,7 +1868,7 @@ function renderDashboard() {
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${barCol},transparent)"></div>
       <div style="font-size:0.62em;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;color:var(--muted);margin-bottom:10px;margin-top:6px">${lbl}</div>
-      <div style="font-family:'Syne',sans-serif;font-size:1.75em;font-weight:800;line-height:1;color:${valCol}">${val}</div>
+      <div style="font-family:'Syne',sans-serif !important;font-size:1.75em;font-weight:800;line-height:1;color:${valCol};letter-spacing:-0.02em;">${val}</div>
       <div style="display:inline-block;font-size:0.6em;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:8px;font-family:'DM Mono',monospace;background:var(--surface2);color:${badgeCol}">${badge}</div>
     </div>`;
 
