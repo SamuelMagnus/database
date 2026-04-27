@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="volt">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -16,15 +16,76 @@
 
   /* Portrait lock handled by manifest.json */
 
-  :root {
+  /* ── THEMES ── */
+  [data-theme="volt"] {
     --bg:#0f0f0f; --surface:#181818; --surface2:#222222; --border:#2e2e2e;
-    --accent:#e8ff47; --accent2:#ff6b35; --text:#f0f0f0; --muted:#888;
-    --danger:#ff4444; --success:#44ff88; --radius:6px; --font-scale:1;
+    --text:#f0f0f0; --muted:#888; --accent:#e8ff47; --accent2:#ff6b35;
+    --success:#44ff88; --danger:#ff4444; --sold:#6495ed;
+    --banner-bg:rgba(232,255,71,0.07); --banner-border:rgba(232,255,71,0.18);
+    --radius:6px; --font-scale:1;
   }
-  [data-theme="light"] {
-    --bg:#f4f4f0; --surface:#ffffff; --surface2:#efefeb; --border:#ddddd8;
-    --accent:#b8a800; --accent2:#d45000; --text:#1a1a1a; --muted:#777;
-    --danger:#cc2222; --success:#1a9a50;
+  [data-theme="nebula"] {
+    --bg:#0a0a12; --surface:#12121e; --surface2:#1a1a2e; --border:#252540;
+    --text:#e8e8ff; --muted:#7070a0; --accent:#b57bff; --accent2:#00d4ff;
+    --success:#00ffaa; --danger:#ff4466; --sold:#ff9f43;
+    --banner-bg:rgba(181,123,255,0.07); --banner-border:rgba(181,123,255,0.2);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="ember"] {
+    --bg:#0f0d09; --surface:#1a1610; --surface2:#241f14; --border:#332b1a;
+    --text:#f5ead8; --muted:#8a7a5a; --accent:#ffb347; --accent2:#ff6b6b;
+    --success:#7dff6b; --danger:#ff4444; --sold:#5bc8ff;
+    --banner-bg:rgba(255,179,71,0.07); --banner-border:rgba(255,179,71,0.2);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="midnight"] {
+    --bg:#080e1a; --surface:#0e1628; --surface2:#141e34; --border:#1e2e4a;
+    --text:#c8deff; --muted:#5a7499; --accent:#38bfff; --accent2:#00e5c0;
+    --success:#4eff91; --danger:#ff4d6a; --sold:#ffb347;
+    --banner-bg:rgba(56,191,255,0.07); --banner-border:rgba(56,191,255,0.2);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="neon"] {
+    --bg:#0d0d0d; --surface:#161616; --surface2:#1e1e1e; --border:#2a2a2a;
+    --text:#f0f0f0; --muted:#777; --accent:#ff2d78; --accent2:#c8ff00;
+    --success:#00ff9f; --danger:#ff4444; --sold:#7b5cff;
+    --banner-bg:rgba(255,45,120,0.07); --banner-border:rgba(255,45,120,0.2);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="chalk"] {
+    --bg:#f7f7f5; --surface:#ffffff; --surface2:#efefeb; --border:#e0e0d8;
+    --text:#1a1a1a; --muted:#888; --accent:#1a1a1a; --accent2:#d45000;
+    --success:#1a9a50; --danger:#cc2222; --sold:#3366cc;
+    --banner-bg:rgba(26,26,26,0.04); --banner-border:rgba(26,26,26,0.12);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="blossom"] {
+    --bg:#fff5f7; --surface:#ffffff; --surface2:#ffeef2; --border:#ffd6df;
+    --text:#2a1218; --muted:#b08090; --accent:#e8406a; --accent2:#ff8c42;
+    --success:#2d9e6b; --danger:#cc1133; --sold:#7b5cff;
+    --banner-bg:rgba(232,64,106,0.06); --banner-border:rgba(232,64,106,0.18);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="sage"] {
+    --bg:#f4f7f2; --surface:#ffffff; --surface2:#eaf0e6; --border:#d0ddc8;
+    --text:#1a2615; --muted:#7a9070; --accent:#3a7d44; --accent2:#e07b39;
+    --success:#2d9e6b; --danger:#cc2222; --sold:#3366aa;
+    --banner-bg:rgba(58,125,68,0.06); --banner-border:rgba(58,125,68,0.18);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="arctic"] {
+    --bg:#f0f5fb; --surface:#ffffff; --surface2:#e4edf8; --border:#c8d8ee;
+    --text:#0e1e33; --muted:#6a86aa; --accent:#1a6bbf; --accent2:#e05c2a;
+    --success:#1a9a50; --danger:#cc2222; --sold:#7b3fc4;
+    --banner-bg:rgba(26,107,191,0.06); --banner-border:rgba(26,107,191,0.18);
+    --radius:6px; --font-scale:1;
+  }
+  [data-theme="dusk"] {
+    --bg:#f5f3ff; --surface:#ffffff; --surface2:#ede9ff; --border:#d8d0f8;
+    --text:#1a1233; --muted:#8878b8; --accent:#6c3fc4; --accent2:#e8a020;
+    --success:#2d9e6b; --danger:#cc2222; --sold:#e8406a;
+    --banner-bg:rgba(108,63,196,0.06); --banner-border:rgba(108,63,196,0.18);
+    --radius:6px; --font-scale:1;
   }
 
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -41,7 +102,11 @@
   .save-indicator.saved   { background:rgba(68,255,136,0.12); color:var(--success); }
   .save-indicator.saving  { background:rgba(232,255,71,0.12);  color:var(--accent); }
   .save-indicator.unsaved { background:rgba(255,68,68,0.12);   color:var(--danger); }
-  [data-theme="light"] .save-indicator.saved { background:rgba(26,154,80,0.1); }
+  [data-theme="chalk"] .save-indicator.saved,
+  [data-theme="blossom"] .save-indicator.saved,
+  [data-theme="sage"] .save-indicator.saved,
+  [data-theme="arctic"] .save-indicator.saved,
+  [data-theme="dusk"] .save-indicator.saved { background:rgba(26,154,80,0.1); }
 
   .controls-bar { display:flex; align-items:center; gap:10px; }
 
@@ -69,7 +134,11 @@
   .nav-item { display:flex; align-items:center; gap:10px; padding:9px 20px; cursor:pointer; font-size:0.9em; font-weight:600; font-family:'Inter',sans-serif; color:var(--muted); border-left:3px solid transparent; transition:all 0.12s; white-space:nowrap; overflow:hidden; }
   .nav-item:hover { color:var(--text); background:var(--surface2); }
   .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:rgba(232,255,71,0.06); }
-  [data-theme="light"] .nav-item.active { background:rgba(184,168,0,0.08); }
+  [data-theme="chalk"] .nav-item.active,
+  [data-theme="blossom"] .nav-item.active,
+  [data-theme="sage"] .nav-item.active,
+  [data-theme="arctic"] .nav-item.active,
+  [data-theme="dusk"] .nav-item.active { background:rgba(0,0,0,0.05); }
   .nav-item .icon { font-size:1em; width:20px; text-align:center; flex-shrink:0; }
   .nav-item .nav-label { transition:opacity 0.2s; }
   .badge { margin-left:auto; font-family:'DM Mono',monospace; font-size:0.7em; background:var(--surface2); color:var(--muted); padding:1px 7px; border-radius:20px; flex-shrink:0; }
@@ -116,8 +185,12 @@
   .status-listed    { background:rgba(232,255,71,0.12);   color:var(--accent); }
   .status-sold      { background:rgba(255,107,53,0.12);   color:var(--accent2); }
   .status-low-stock { background:rgba(255,165,0,0.12);    color:orange; }
-  [data-theme="light"] .status-in-stock { background:rgba(26,154,80,0.1); }
-  [data-theme="light"] .status-listed   { background:rgba(184,168,0,0.1); }
+  [data-theme="chalk"] .status-in-stock,[data-theme="blossom"] .status-in-stock,
+  [data-theme="sage"] .status-in-stock,[data-theme="arctic"] .status-in-stock,
+  [data-theme="dusk"] .status-in-stock { background:rgba(26,154,80,0.1); }
+  [data-theme="chalk"] .status-listed,[data-theme="blossom"] .status-listed,
+  [data-theme="sage"] .status-listed,[data-theme="arctic"] .status-listed,
+  [data-theme="dusk"] .status-listed { background:rgba(0,0,0,0.06); }
 
   .price-col { font-family:'DM Mono',monospace; font-weight:500; }
   .qty-col   { font-family:'DM Mono',monospace; text-align:center; }
@@ -228,7 +301,26 @@
   .confirm-msg { color:var(--muted); font-size:0.92em; margin-bottom:20px; line-height:1.55; font-family:'Inter',sans-serif; }
   .dash-divider { border:none; border-top:1px solid var(--border); margin:28px 0; }
 
-  ::-webkit-scrollbar{width:6px;height:6px;}
+  /* ── THEME PICKER ── */
+  .theme-picker-wrap { position:relative; }
+  .theme-picker-btn { display:flex; align-items:center; gap:6px; background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 12px; cursor:pointer; font-family:'Inter',sans-serif; font-size:0.75em; font-weight:700; color:var(--text); transition:all 0.15s; white-space:nowrap; }
+  .theme-picker-btn:hover { border-color:var(--accent); }
+  .theme-picker-swatch { width:14px; height:14px; border-radius:50%; border:1px solid rgba(128,128,128,0.3); flex-shrink:0; }
+  .theme-picker-dropdown { display:none; position:absolute; top:calc(100% + 8px); right:0; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px; z-index:500; box-shadow:0 8px 32px rgba(0,0,0,0.3); width:220px; }
+  .theme-picker-dropdown.open { display:block; }
+  .theme-picker-section { font-size:0.62em; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); padding:4px 4px 6px; }
+  .theme-picker-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:8px; }
+  .tp-item { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px; border-radius:8px; border:2px solid transparent; transition:all 0.12s; }
+  .tp-item:hover { background:var(--surface2); }
+  .tp-item.active { border-color:var(--accent); }
+  .tp-swatch { width:30px; height:30px; border-radius:50%; border:2px solid rgba(128,128,128,0.2); }
+  .tp-label { font-size:0.55em; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); white-space:nowrap; }
+  .tp-item.active .tp-label { color:var(--accent); }
+
+  /* Mobile theme picker — in bottom menu */
+  @media (max-width:768px) {
+    .theme-picker-dropdown { right:auto; left:0; width:240px; }
+  }
   ::-webkit-scrollbar-track{background:var(--bg);}
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
   ::-webkit-scrollbar-thumb:hover{background:#888;}
@@ -365,9 +457,59 @@
     <span>VALUE: <b id="hdr-value">£0.00</b></span>
   </div>
   <div class="controls-bar">
-    <div class="theme-toggle">
-      <button class="theme-btn active" id="btn-dark"  onclick="setTheme('dark')">🌙 Dark</button>
-      <button class="theme-btn"        id="btn-light" onclick="setTheme('light')">☀️ Light</button>
+    <div class="theme-picker-wrap" id="theme-picker-wrap">
+      <button class="theme-picker-btn" onclick="toggleThemePicker()" id="theme-picker-btn">
+        <div class="theme-picker-swatch" id="theme-swatch" style="background:linear-gradient(135deg,#0f0f0f 50%,#e8ff47 50%)"></div>
+        <span id="theme-picker-label">Volt</span> ▾
+      </button>
+      <div class="theme-picker-dropdown" id="theme-dropdown">
+        <div class="theme-picker-section">🌙 Dark</div>
+        <div class="theme-picker-grid">
+          <div class="tp-item active" id="tp-volt" onclick="setTheme('volt')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#0f0f0f 50%,#e8ff47 50%)"></div>
+            <div class="tp-label">Volt</div>
+          </div>
+          <div class="tp-item" id="tp-nebula" onclick="setTheme('nebula')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#0a0a12 50%,#b57bff 50%)"></div>
+            <div class="tp-label">Nebula</div>
+          </div>
+          <div class="tp-item" id="tp-ember" onclick="setTheme('ember')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#0f0d09 50%,#ffb347 50%)"></div>
+            <div class="tp-label">Ember</div>
+          </div>
+          <div class="tp-item" id="tp-midnight" onclick="setTheme('midnight')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#080e1a 50%,#38bfff 50%)"></div>
+            <div class="tp-label">Midnght</div>
+          </div>
+          <div class="tp-item" id="tp-neon" onclick="setTheme('neon')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#0d0d0d 50%,#ff2d78 50%)"></div>
+            <div class="tp-label">Neon</div>
+          </div>
+        </div>
+        <div class="theme-picker-section">☀️ Light</div>
+        <div class="theme-picker-grid">
+          <div class="tp-item" id="tp-chalk" onclick="setTheme('chalk')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#f7f7f5 50%,#1a1a1a 50%)"></div>
+            <div class="tp-label">Chalk</div>
+          </div>
+          <div class="tp-item" id="tp-blossom" onclick="setTheme('blossom')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#fff5f7 50%,#e8406a 50%)"></div>
+            <div class="tp-label">Blossom</div>
+          </div>
+          <div class="tp-item" id="tp-sage" onclick="setTheme('sage')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#f4f7f2 50%,#3a7d44 50%)"></div>
+            <div class="tp-label">Sage</div>
+          </div>
+          <div class="tp-item" id="tp-arctic" onclick="setTheme('arctic')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#f0f5fb 50%,#1a6bbf 50%)"></div>
+            <div class="tp-label">Arctic</div>
+          </div>
+          <div class="tp-item" id="tp-dusk" onclick="setTheme('dusk')">
+            <div class="tp-swatch" style="background:linear-gradient(135deg,#f5f3ff 50%,#6c3fc4 50%)"></div>
+            <div class="tp-label">Dusk</div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="size-control" title="Text size">
       <span>A</span>
@@ -396,7 +538,6 @@
     <div class="nav-item active" onclick="showPage('inventory',this)">
       <span class="icon">📦</span> <span class="nav-label">Inventory</span> <span class="badge" id="nav-inventory-count">0</span>
     </div>
-
     <div class="sidebar-section">Filter by Status</div>
     <div class="nav-item" onclick="filterByStatus('all',this)"><span class="icon">🔘</span> <span class="nav-label">All Items</span></div>
     <div class="nav-item" onclick="filterByStatus('In Stock',this)"><span class="icon">🟢</span> <span class="nav-label">In Stock</span></div>
@@ -421,7 +562,7 @@
 
   <main>
     <!-- INVENTORY -->
-    <div class="page active" id="page-inventory">
+    <div class="page" id="page-inventory">
       <div class="page-header">
         <div><div class="page-title">Inventory</div><div class="page-sub" id="inventory-subtitle">All items</div></div>
       </div>
@@ -452,70 +593,14 @@
     </div>
 
     <!-- DASHBOARD -->
-    <div class="page" id="page-dashboard">
+    <div class="page active" id="page-dashboard">
       <div class="page-header">
         <div><div class="page-title">Dashboard</div><div class="page-sub">Your inventory at a glance</div></div>
       </div>
-
-      <!-- ALL TIME -->
-      <div class="dash-section" id="section-alltime">
-        <div class="dash-section-title" onclick="toggleSection('alltime')">
-          📈 All-Time Stats <span class="pill">All Time</span>
-          <span class="dash-chevron">▾</span>
-        </div>
-        <div class="dash-section-body">
-          <div class="stats-grid" id="alltime-grid"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px">
-            <div class="table-wrap" style="padding:20px">
-              <div style="font-weight:700;font-size:0.9em;margin-bottom:14px">By Category</div>
-              <div id="cat-breakdown"></div>
-            </div>
-            <div class="table-wrap" style="padding:20px">
-              <div style="font-weight:700;font-size:0.9em;margin-bottom:14px">By Status</div>
-              <div id="status-breakdown"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="dash-divider">
-
-      <!-- CURRENT STOCK -->
-      <div class="dash-section" id="section-current">
-        <div class="dash-section-title green-pill" onclick="toggleSection('current')">
-          📦 Current Stock &amp; Expected Profit <span class="pill">In Stock Now</span>
-          <span class="dash-chevron">▾</span>
-        </div>
-        <div class="dash-section-body">
-          <div class="stats-grid" id="current-grid"></div>
-          <div class="table-wrap" style="padding:20px;margin-bottom:20px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-              <div style="font-weight:700;font-size:0.9em">Active Stock <span style="font-size:0.72em;font-weight:400;color:var(--muted);font-family:'DM Mono',monospace">— click for details</span></div>
-              <span onclick="filterByStatus('all',null);showPage('inventory',document.querySelector('.nav-item'))" style="font-size:0.75em;color:var(--accent);cursor:pointer;font-family:'DM Mono',monospace">View all →</span>
-            </div>
-            <div id="current-items-list"></div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="dash-divider">
-
-      <!-- RECENTLY ADDED -->
-      <div class="dash-section" id="section-recent">
-        <div class="dash-section-title" style="border-bottom-color:var(--muted)" onclick="toggleSection('recent')">
-          🕐 Recently Added <span class="pill" style="background:var(--muted);color:var(--bg)">Latest</span>
-          <span class="dash-chevron">▾</span>
-        </div>
-        <div class="dash-section-body">
-          <div class="table-wrap" style="padding:20px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-              <div style="font-weight:700;font-size:0.9em">Recently Added <span style="font-size:0.72em;font-weight:400;color:var(--muted);font-family:'DM Mono',monospace">— click for details</span></div>
-              <span onclick="filterByStatus('all',null);showPage('inventory',document.querySelector('.nav-item'))" style="font-size:0.75em;color:var(--accent);cursor:pointer;font-family:'DM Mono',monospace">View all →</span>
-            </div>
-            <div id="recent-items"></div>
-          </div>
-        </div>
-      </div>
+      <div id="dash-banner"></div>
+      <div id="dash-tiles" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px"></div>
+      <div id="dash-stock-list" style="margin-bottom:14px"></div>
+      <div id="dash-breakdowns" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
     </div>
   </main>
 </div>
@@ -650,11 +735,11 @@
 
 <!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav">
-  <button class="bn-item active" id="bn-inventory" onclick="bottomNav('inventory')">
-    <span class="bn-icon">📦</span>Inventory
-  </button>
-  <button class="bn-item" id="bn-dashboard" onclick="bottomNav('dashboard')">
+  <button class="bn-item active" id="bn-dashboard" onclick="bottomNav('dashboard')">
     <span class="bn-icon">📊</span>Dashboard
+  </button>
+  <button class="bn-item" id="bn-inventory" onclick="bottomNav('inventory')">
+    <span class="bn-icon">📦</span>Inventory
   </button>
   <button class="bn-item bn-add" onclick="openAddModal()" title="Add item">
     <span class="bn-icon">＋</span>
@@ -720,25 +805,62 @@ function bottomNav(page) {
 }
 
 // ── THEME & SIZE ─────────────────────────────────────────────
+const THEME_META = {
+  volt:     { label:'Volt',     bg:'#0f0f0f', swatch:'linear-gradient(135deg,#0f0f0f 50%,#e8ff47 50%)' },
+  nebula:   { label:'Nebula',   bg:'#0a0a12', swatch:'linear-gradient(135deg,#0a0a12 50%,#b57bff 50%)' },
+  ember:    { label:'Ember',    bg:'#0f0d09', swatch:'linear-gradient(135deg,#0f0d09 50%,#ffb347 50%)' },
+  midnight: { label:'Midnight', bg:'#080e1a', swatch:'linear-gradient(135deg,#080e1a 50%,#38bfff 50%)' },
+  neon:     { label:'Neon',     bg:'#0d0d0d', swatch:'linear-gradient(135deg,#0d0d0d 50%,#ff2d78 50%)' },
+  chalk:    { label:'Chalk',    bg:'#f7f7f5', swatch:'linear-gradient(135deg,#f7f7f5 50%,#1a1a1a 50%)' },
+  blossom:  { label:'Blossom',  bg:'#fff5f7', swatch:'linear-gradient(135deg,#fff5f7 50%,#e8406a 50%)' },
+  sage:     { label:'Sage',     bg:'#f4f7f2', swatch:'linear-gradient(135deg,#f4f7f2 50%,#3a7d44 50%)' },
+  arctic:   { label:'Arctic',   bg:'#f0f5fb', swatch:'linear-gradient(135deg,#f0f5fb 50%,#1a6bbf 50%)' },
+  dusk:     { label:'Dusk',     bg:'#f5f3ff', swatch:'linear-gradient(135deg,#f5f3ff 50%,#6c3fc4 50%)' },
+};
+
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('btn-dark').classList.toggle('active', t==='dark');
-  document.getElementById('btn-light').classList.toggle('active', t==='light');
   localStorage.setItem('sc_theme', t);
-  const meta = document.getElementById('theme-color-meta');
-  if (meta) meta.content = t==='dark' ? '#0f0f0f' : '#f4f4f0';
+  // Update picker button
+  const meta = THEME_META[t] || THEME_META.volt;
+  const swatch = document.getElementById('theme-swatch');
+  const label  = document.getElementById('theme-picker-label');
+  if (swatch) swatch.style.background = meta.swatch;
+  if (label)  label.textContent = meta.label;
+  // Update active state in dropdown
+  document.querySelectorAll('.tp-item').forEach(el => el.classList.remove('active'));
+  const active = document.getElementById('tp-'+t);
+  if (active) active.classList.add('active');
+  // Update PWA theme-color meta
+  const colorMeta = document.getElementById('theme-color-meta');
+  if (colorMeta) colorMeta.content = meta.bg;
+  // Close picker
+  const dd = document.getElementById('theme-dropdown');
+  if (dd) dd.classList.remove('open');
 }
+
+function toggleThemePicker() {
+  document.getElementById('theme-dropdown').classList.toggle('open');
+}
+
+// Close picker when clicking outside
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('theme-picker-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('theme-dropdown')?.classList.remove('open');
+  }
+});
+
 function setFontSize(v) {
   document.documentElement.style.setProperty('--font-scale', v);
   localStorage.setItem('sc_fontsize', v);
 }
 function loadPrefs() {
-  const t = localStorage.getItem('sc_theme') || 'dark';
+  const t = localStorage.getItem('sc_theme') || 'volt';
   const s = localStorage.getItem('sc_fontsize') || '1';
   setTheme(t);
   document.getElementById('font-slider').value = s;
   setFontSize(s);
-  // Restore sidebar collapsed state (desktop only)
   if (window.innerWidth > 768 && localStorage.getItem('sc_sidebar_collapsed') === 'true') {
     document.body.classList.add('sidebar-collapsed');
   }
@@ -1258,120 +1380,104 @@ function renderDashboard() {
   const all    = inventory;
   const sold   = all.filter(i=>i.status==='Sold');
   const active = all.filter(i=>i.status!=='Sold');
+  const lowStock = all.filter(i=>i.status==='Low Stock');
 
-  // ALL TIME
+  // Financials
   const revenue    = all.reduce((s,i)=>s+((i.sales||[]).reduce((r,x)=>r+(parseFloat(x.price)||0),0)),0);
   const soldCost   = all.reduce((s,i)=>{
-    const origQty = parseInt(i.originalQty||i.qty)||1;
-    const costPer = (parseFloat(i.cost)||0)/origQty;
-    const totalSoldQty = (i.sales||[]).reduce((r,x)=>r+(parseInt(x.qty)||0),0);
-    return s + (costPer*totalSoldQty);
+    const oq = parseInt(i.originalQty||i.qty)||1;
+    const cp = (parseFloat(i.cost)||0)/oq;
+    const sq = (i.sales||[]).reduce((r,x)=>r+(parseInt(x.qty)||0),0);
+    return s+(cp*sq);
   },0);
   const realProfit = revenue - soldCost;
   const allCost    = all.reduce((s,i)=>s+(parseFloat(i.cost)||0),0);
-
-  document.getElementById('alltime-grid').innerHTML=`
-    <div class="stat-card" onclick="filterByStatus('all',null);showPage('inventory',document.querySelector('.nav-item'))" style="cursor:pointer">
-      <div class="stat-label">Total Items Ever</div><div class="stat-value">${all.length}</div>
-      <div class="stat-sub">${sold.length} sold · ${active.length} active</div>
-    </div>
-    <div class="stat-card" onclick="filterByStatus('Sold',null);showPage('inventory',document.querySelector('.nav-item'))" style="cursor:pointer">
-      <div class="stat-label">Total Revenue</div><div class="stat-value" style="color:var(--accent)">£${revenue.toFixed(0)}</div>
-      <div class="stat-sub">From ${sold.length} sales</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Cost Spent</div><div class="stat-value" style="color:var(--accent)">£${allCost.toFixed(0)}</div>
-      <div class="stat-sub">Across all stock</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Realised Profit</div>
-      <div class="stat-value" style="color:${realProfit>=0?'var(--success)':'var(--danger)'}">£${realProfit.toFixed(0)}</div>
-      <div class="stat-sub">Revenue minus cost of sold items</div>
-    </div>`;
-
-  // cat breakdown
-  const cc={}; all.forEach(i=>{cc[i.category||'Other']=(cc[i.category||'Other']||0)+1;});
-  const mx=Math.max(...Object.values(cc),1);
-  document.getElementById('cat-breakdown').innerHTML=Object.entries(cc).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`
-    <div style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;font-size:0.82em;margin-bottom:4px">${catTag(c)}<span style="font-family:'DM Mono',monospace;font-size:0.78em">${n}</span></div>
-      <div style="background:var(--border);border-radius:4px;height:4px"><div style="background:var(--accent);height:4px;border-radius:4px;width:${Math.round(n/mx*100)}%"></div></div>
-    </div>`).join('')||'<p style="color:var(--muted);font-size:0.85em">No items yet</p>';
-
-  // status breakdown
-  const sc={}; all.forEach(i=>{sc[i.status||'In Stock']=(sc[i.status||'In Stock']||0)+1;});
-  const ms=Math.max(...Object.values(sc),1);
-  document.getElementById('status-breakdown').innerHTML=Object.entries(sc).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`
-    <div style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;font-size:0.82em;margin-bottom:4px">${statusTag(s)}<span style="font-family:'DM Mono',monospace;font-size:0.78em">${n}</span></div>
-      <div style="background:var(--border);border-radius:4px;height:4px"><div style="background:var(--accent);height:4px;border-radius:4px;width:${Math.round(n/ms*100)}%"></div></div>
-    </div>`).join('')||'<p style="color:var(--muted);font-size:0.85em">No items yet</p>';
-
-  // CURRENT STOCK
-  const curCost    = active.reduce((s,i)=>s+(parseFloat(i.cost)||0)*(parseInt(i.qty)||1),0);
-  const curListVal = active.reduce((s,i)=>s+(parseFloat(i.price)||0)*(parseInt(i.qty)||1),0);
-  const expProfit  = curListVal - curCost;
+  const curListVal = active.reduce((s,i)=>s+(parseFloat(i.price)||0),0);
+  const margin     = revenue>0 ? Math.round((realProfit/revenue)*100) : 0;
   const listedNow  = active.filter(i=>i.status==='Listed').length;
 
-  document.getElementById('current-grid').innerHTML=`
-    <div class="stat-card" onclick="filterByStatus('In Stock',null);showPage('inventory',document.querySelector('.nav-item'))" style="cursor:pointer">
-      <div class="stat-label">Active Items</div><div class="stat-value" style="color:var(--success)">${active.length}</div>
-      <div class="stat-sub">${listedNow} listed on eBay</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Stock Value</div><div class="stat-value" style="color:cornflowerblue">£${curListVal.toFixed(0)}</div>
-      <div class="stat-sub">At listing prices</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Stock Cost</div><div class="stat-value" style="color:var(--accent)">£${curCost.toFixed(0)}</div>
-      <div class="stat-sub">What you paid</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Expected Profit</div>
-      <div class="stat-value" style="color:${expProfit>=0?'var(--success)':'var(--danger)'}">£${expProfit.toFixed(0)}</div>
-      <div class="stat-sub">If all sold at list price</div>
+  // ── BANNER ──
+  document.getElementById('dash-banner').innerHTML = `
+    <div style="background:var(--banner-bg);border:1px solid var(--banner-border);border-radius:12px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:3em;opacity:0.08;color:var(--accent)">◈</div>
+      <div style="font-size:0.66em;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:var(--accent);margin-bottom:6px">All-Time Performance</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:2.4em;font-weight:900;line-height:1;">£${realProfit.toFixed(0)} <span style="font-size:0.42em;color:var(--muted);font-family:'Inter',sans-serif;font-weight:400">profit</span></div>
+      <div style="font-size:0.74em;color:var(--muted);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap;">
+        <span>Revenue <b style="color:var(--success)">£${revenue.toFixed(0)}</b></span>
+        <span>Cost <b style="color:var(--accent2)">£${allCost.toFixed(0)}</b></span>
+        <span>Margin <b style="color:var(--success)">${margin}%</b></span>
+      </div>
     </div>`;
 
-  const curList = [...active].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,10);
-  document.getElementById('current-items-list').innerHTML = curList.length
-    ? curList.map(item=>{
-        const ep=(parseFloat(item.price)||0)-(parseFloat(item.cost)||0);
-        return `<div onclick="viewItem('${item.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:4px;transition:background 0.12s" onmouseover="this.style.background='rgba(128,128,128,0.06)'" onmouseout="this.style.background='transparent'">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span>📦</span>
-            <div>
-              <div style="font-weight:700;font-size:0.88em">${esc(item.name)}</div>
-              <div style="font-size:0.74em;color:var(--muted)">${item.location?'📍 '+esc(item.location):''} ${item.sku?'· '+esc(item.sku):''}</div>
-            </div>
+  // ── 4 TILES ──
+  const tile = (barCol, lbl, val, valCol, badge, badgeCol) => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${barCol},transparent)"></div>
+      <div style="font-size:0.64em;text-transform:uppercase;letter-spacing:0.09em;font-weight:700;color:var(--muted);margin-bottom:8px;margin-top:6px">${lbl}</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:1.6em;font-weight:900;line-height:1;color:${valCol}">${val}</div>
+      <div style="display:inline-block;font-size:0.62em;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px;font-family:'DM Mono',monospace;background:${badgeCol}18;color:${badgeCol}">${badge}</div>
+    </div>`;
+
+  document.getElementById('dash-tiles').innerHTML =
+    tile('var(--accent)',  'Active Stock', active.length,    'var(--accent)',  listedNow+' listed',       'var(--accent)') +
+    tile('var(--success)', 'Stock Value',  '£'+curListVal.toFixed(0), 'var(--success)', 'at list price', 'var(--success)') +
+    tile('var(--sold)',    'Items Sold',   sold.length,      'var(--sold)',    'all time',                'var(--sold)') +
+    tile('var(--danger)',  'Low Stock',    lowStock.length,  'var(--danger)',  'needs restock',           'var(--danger)');
+
+  // ── TOP STOCK LIST ──
+  const topItems = [...active].sort((a,b)=>(parseFloat(b.price)||0)-(parseFloat(a.price)||0)).slice(0,5);
+  document.getElementById('dash-stock-list').innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:0.78em;font-weight:800;">Top Stock</div>
+        <div onclick="showPage('inventory',document.querySelector('.nav-item[onclick*=inventory]'))" style="font-size:0.68em;color:var(--accent);font-family:'DM Mono',monospace;cursor:pointer;">View all →</div>
+      </div>
+      ${topItems.length ? topItems.map(item => {
+        const origQty = parseInt(item.originalQty||item.qty)||1;
+        const pricePer = (parseFloat(item.price)||0)/origQty;
+        const costPer  = (parseFloat(item.cost)||0)/origQty;
+        const exp = pricePer - costPer;
+        return `<div onclick="viewItem('${item.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='rgba(128,128,128,0.05)'" onmouseout="this.style.background='transparent'">
+          <div>
+            <div style="font-size:0.84em;font-weight:700;">${esc(item.name)}</div>
+            <div style="font-size:0.7em;color:var(--muted);margin-top:2px;">${item.location?'📍 '+esc(item.location)+' · ':''} Qty ${item.qty} ${statusTag(item.status)}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            ${statusTag(item.status)}
-            <span style="font-family:'DM Mono',monospace;font-size:0.82em">${fmt(item.price)}</span>
-            <span style="font-family:'DM Mono',monospace;font-size:0.78em;color:${ep>=0?'var(--success)':'var(--danger)'}">${ep>=0?'+':''}£${ep.toFixed(2)}</span>
-            <span style="color:var(--muted)">›</span>
+          <div style="text-align:right;flex-shrink:0;margin-left:12px;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.82em;font-weight:600;">${fmt(pricePer.toFixed(2))}</div>
+            <div style="font-size:0.7em;font-weight:700;color:${exp>=0?'var(--success)':'var(--danger)'};">${exp>=0?'+':''}£${exp.toFixed(2)} exp.</div>
           </div>
         </div>`;
-      }).join('')
-    : '<p style="color:var(--muted);font-size:0.85em;padding:10px 0">No active stock right now</p>';
+      }).join('') : '<div style="padding:20px 16px;color:var(--muted);font-size:0.85em;">No active stock yet</div>'}
+    </div>`;
 
-  const recent=[...inventory].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,8);
-  document.getElementById('recent-items').innerHTML=recent.length
-    ? recent.map(item=>`
-        <div onclick="viewItem('${item.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:4px;transition:background 0.12s" onmouseover="this.style.background='rgba(128,128,128,0.06)'" onmouseout="this.style.background='transparent'">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span>📦</span>
-            <div>
-              <div style="font-weight:700;font-size:0.88em">${esc(item.name)}</div>
-              <div style="font-size:0.74em;color:var(--muted)">${item.location?'📍 '+esc(item.location):''} ${item.sku?'· '+esc(item.sku):''}</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            ${catTag(item.category)} ${statusTag(item.status)}
-            <span style="font-family:'DM Mono',monospace;font-size:0.85em;font-weight:600">${fmt(item.price)}</span>
-            <span style="color:var(--muted)">›</span>
-          </div>
-        </div>`).join('')
-    : '<p style="color:var(--muted);font-size:0.85em">No items yet</p>';
+  // ── BREAKDOWNS ──
+  const cc={}, sc={};
+  all.forEach(i=>{
+    cc[i.category||'Other']=(cc[i.category||'Other']||0)+1;
+    sc[i.status||'In Stock']=(sc[i.status||'In Stock']||0)+1;
+  });
+  const maxC = Math.max(...Object.values(cc),1);
+  const maxS = Math.max(...Object.values(sc),1);
+  const statusColors = {'In Stock':'var(--success)','Listed':'var(--accent)','Sold':'var(--sold)','Low Stock':'var(--danger)'};
+
+  const barRow = (name, count, max, color) => `
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+      <div style="font-size:0.72em;flex:1;font-weight:600;color:${color}">${name}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.68em;color:var(--muted)">${count}</div>
+      <div style="width:52px;height:4px;border-radius:2px;background:var(--surface2);overflow:hidden;">
+        <div style="height:100%;border-radius:2px;width:${Math.round(count/max*100)}%;background:${color}"></div>
+      </div>
+    </div>`;
+
+  document.getElementById('dash-breakdowns').innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;">
+      <div style="font-size:0.68em;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px;">By Category</div>
+      ${Object.entries(cc).sort((a,b)=>b[1]-a[1]).map(([c,n])=>barRow(c,n,maxC,'var(--accent)')).join('')||'<p style="color:var(--muted);font-size:0.8em">No items yet</p>'}
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;">
+      <div style="font-size:0.68em;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px;">By Status</div>
+      ${Object.entries(sc).sort((a,b)=>b[1]-a[1]).map(([s,n])=>barRow(s,n,maxS,statusColors[s]||'var(--muted)')).join('')||'<p style="color:var(--muted);font-size:0.8em">No items yet</p>'}
+    </div>`;
 }
 
 // ── EXPORT / IMPORT ──────────────────────────────────────────
@@ -1451,7 +1557,7 @@ if (screen.orientation && screen.orientation.lock) {
 (async()=>{
   try { loadPrefs(); } catch(e) {}
   try { await loadInventory(); } catch(e) { inventory = []; }
-  try { renderTable(); } catch(e) {}
+  try { renderTable(); renderDashboard(); } catch(e) {}
 })();
 </script>
 </body>
