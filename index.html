@@ -1131,34 +1131,33 @@ function renderMobileCards(items) {
     const qtyLeft = parseInt(item.qty)||0;
     const qtyColor = qtyLeft===0?'var(--danger)':qtyLeft<=2?'orange':'var(--text)';
     const photoHtml = item.photos&&item.photos[0]
-      ? `<div style="width:100%;height:180px;border-radius:8px;overflow:hidden;margin-bottom:12px;position:relative;">
-          <img src="${item.photos[0]}" style="width:100%;height:100%;object-fit:cover;">
-          <span style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:0.65em;font-family:'DM Mono',monospace;font-weight:700;padding:2px 8px;border-radius:20px;">×${qtyLeft}</span>
-         </div>`
-      : '';
-    return `<div class="m-card" style="padding:0;overflow:hidden;">
-      ${photoHtml}
-      <div style="padding:14px;">
-        <div class="m-card-top">
-          <div>
+      ? `<img src="${item.photos[0]}" style="width:80px;height:80px;border-radius:8px;object-fit:cover;flex-shrink:0;">`
+      : `<div style="width:80px;height:80px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:6px;text-align:center;overflow:hidden;">
+           <span style="font-family:'Nunito',sans-serif;font-weight:900;font-size:0.82em;color:var(--text);line-height:1.2;word-break:break-word;">${esc(item.name||'Item')}</span>
+         </div>`;
+    return `<div class="m-card" style="padding:14px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
+        ${photoHtml}
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:4px;">
             <div class="m-card-name">${esc(item.name||'Unnamed')}</div>
-            ${item.sku?`<div class="m-card-sku">${esc(item.sku)}</div>`:''}
+            ${statusTag(item.status)}
           </div>
-          ${statusTag(item.status)}
+          ${item.sku?`<div class="m-card-sku">${esc(item.sku)}</div>`:''}
+          <div class="m-card-tags" style="margin-top:4px;">${catTag(item.category)}${item.location?`<span class="location-badge">📍 ${esc(item.location)}</span>`:''}</div>
         </div>
-        <div class="m-card-tags">${catTag(item.category)}${item.location?`<span class="location-badge">📍 ${esc(item.location)}</span>`:''}</div>
-        <div class="m-card-row"><span class="m-card-key">Qty in stock</span><span class="m-card-val" style="color:${qtyColor}">${qtyLeft}${totalSoldQty>0?` <span style="color:var(--muted);font-size:0.85em">(${totalSoldQty} sold)</span>`:''}</span></div>
-        <div class="m-card-row"><span class="m-card-key">Cost per item</span><span class="m-card-val" style="color:var(--muted)">${costPer>0?'£'+costPer.toFixed(2):'—'}</span></div>
-        <div class="m-card-row"><span class="m-card-key">Listed per item</span><span class="m-card-val">${pricePer>0?'£'+pricePer.toFixed(2):'—'}</span></div>
-        <div class="m-card-row"><span class="m-card-key">Total stock value</span><span class="m-card-val" style="color:var(--accent)">${pricePer>0&&qtyLeft>0?'£'+(pricePer*qtyLeft).toFixed(2):'—'}</span></div>
-        ${sales.length>0?`<div class="m-card-row"><span class="m-card-key">Revenue so far</span><span class="m-card-val" style="color:var(--accent2)">${fmt(totalRevenue)} <span style="color:${totalProfit>=0?'var(--success)':'var(--danger)'};font-size:0.85em">${totalProfit>=0?'+':''}£${totalProfit.toFixed(2)} profit</span></span></div>`:''}
-        <div class="m-card-actions">
-          <button class="btn btn-ghost btn-sm" onclick="editItem('${item.id}')">✏️ Edit</button>
-          ${item.status!=='Sold'
-            ?`<button class="btn btn-sm" style="background:rgba(255,107,53,0.15);color:var(--accent2);border:1px solid rgba(255,107,53,0.3)" onclick="openSellModal('${item.id}')">🏷 Sold</button>`
-            :`<button class="btn btn-sm" style="background:rgba(68,255,136,0.1);color:var(--success);border:1px solid rgba(68,255,136,0.25)" onclick="markAsInStock('${item.id}')">↩ Relist</button>`}
-          <button class="btn btn-danger btn-sm" onclick="confirmDelete('${item.id}')">🗑</button>
-        </div>
+      </div>
+      <div class="m-card-row"><span class="m-card-key">Qty in stock</span><span class="m-card-val" style="color:${qtyColor}">${qtyLeft}${totalSoldQty>0?` <span style="color:var(--muted);font-size:0.85em">(${totalSoldQty} sold)</span>`:''}</span></div>
+      <div class="m-card-row"><span class="m-card-key">Cost per item</span><span class="m-card-val" style="color:var(--muted)">${costPer>0?'£'+costPer.toFixed(2):'—'}</span></div>
+      <div class="m-card-row"><span class="m-card-key">Listed per item</span><span class="m-card-val">${pricePer>0?'£'+pricePer.toFixed(2):'—'}</span></div>
+      <div class="m-card-row"><span class="m-card-key">Total stock value</span><span class="m-card-val" style="color:var(--accent)">${pricePer>0&&qtyLeft>0?'£'+(pricePer*qtyLeft).toFixed(2):'—'}</span></div>
+      ${sales.length>0?`<div class="m-card-row"><span class="m-card-key">Revenue so far</span><span class="m-card-val" style="color:var(--accent2)">${fmt(totalRevenue)} <span style="color:${totalProfit>=0?'var(--success)':'var(--danger)'};font-size:0.85em">${totalProfit>=0?'+':''}£${totalProfit.toFixed(2)} profit</span></span></div>`:''}
+      <div class="m-card-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editItem('${item.id}')">✏️ Edit</button>
+        ${item.status!=='Sold'
+          ?`<button class="btn btn-sm" style="background:rgba(255,107,53,0.15);color:var(--accent2);border:1px solid rgba(255,107,53,0.3)" onclick="openSellModal('${item.id}')">🏷 Sold</button>`
+          :`<button class="btn btn-sm" style="background:rgba(68,255,136,0.1);color:var(--success);border:1px solid rgba(68,255,136,0.25)" onclick="markAsInStock('${item.id}')">↩ Relist</button>`}
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete('${item.id}')">🗑</button>
       </div>
     </div>`;
   }).join('')
