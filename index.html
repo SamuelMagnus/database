@@ -822,11 +822,16 @@ function toggleSidebar() {
 }
 function openDrawer() {
   document.getElementById('sidebar').classList.add('drawer-open');
-  document.getElementById('drawer-overlay').style.display = 'block';
-  // small delay so the display:block paints before we add opacity transition
+  const ov = document.getElementById('drawer-overlay');
+  ov.style.display = 'block';
+  ov.style.opacity = '0';
   requestAnimationFrame(() => {
-    document.getElementById('drawer-overlay').style.opacity = '1';
+    requestAnimationFrame(() => {
+      ov.style.opacity = '1';
+    });
   });
+  // Push state so back button closes sidebar instead of exiting
+  history.pushState({ page: history.state?.page || 'dashboard', sidebarOpen: true }, '', '');
 }
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('drawer-open');
@@ -1722,9 +1727,9 @@ window.addEventListener('beforeunload',e=>{ if(unsavedChanges){e.preventDefault(
 // ── BACK BUTTON HANDLING ─────────────────────────────────────
 window.addEventListener('popstate', e => {
   // If any modal is open, close it instead of navigating
-  const openModal = document.querySelector('.modal-overlay.open');
-  if (openModal) {
-    openModal.classList.remove('open');
+  const openModalEl = document.querySelector('.modal-overlay.open');
+  if (openModalEl) {
+    openModalEl.classList.remove('open');
     history.pushState(e.state || { page: 'dashboard' }, '', '');
     return;
   }
