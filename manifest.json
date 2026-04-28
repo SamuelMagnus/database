@@ -3,9 +3,9 @@
   "short_name": "SamCreation",
   "description": "Personal eBay inventory manager for SamCreation",
   "start_url": "./index.html",
-  "display": "fullscreen",
-  "background_color": "#0f0f0f",
-  "theme_color": "#0f0f0f",
+  "display": "standalone",
+  "background_color": "#f5f3ff",
+  "theme_color": "#f5f3ff",
   "orientation": "portrait",
   "icons": [
     {
