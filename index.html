@@ -636,52 +636,60 @@
       🎨 Theme ▾
     </button>
     <div class="theme-picker-dropdown" id="theme-dropdown">
-        <div class="theme-picker-section">🌙 Dark</div>
+        <!-- Auto mode toggle -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px 10px;border-bottom:1px solid var(--border);margin-bottom:8px;">
+          <div style="font-size:0.72em;font-weight:700;color:var(--text);">🔄 Follow System</div>
+          <div id="auto-toggle" onclick="toggleAutoMode()" style="width:40px;height:22px;border-radius:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;">
+            <div id="auto-toggle-knob" style="position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:all 0.2s;"></div>
+          </div>
+        </div>
+        <div class="theme-picker-section">🌙 Dark Theme</div>
         <div class="theme-picker-grid">
-          <div class="tp-item active" id="tp-volt" onclick="setTheme('volt')">
+          <div class="tp-item active" id="tp-volt" onclick="setPreferredTheme('volt','dark')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#0f0f0f 50%,#e8ff47 50%)"></div>
             <div class="tp-label">Volt</div>
           </div>
-          <div class="tp-item" id="tp-nebula" onclick="setTheme('nebula')">
+          <div class="tp-item" id="tp-nebula" onclick="setPreferredTheme('nebula','dark')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#0a0a12 50%,#b57bff 50%)"></div>
             <div class="tp-label">Nebula</div>
           </div>
-          <div class="tp-item" id="tp-ember" onclick="setTheme('ember')">
+          <div class="tp-item" id="tp-ember" onclick="setPreferredTheme('ember','dark')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#0f0d09 50%,#ffb347 50%)"></div>
             <div class="tp-label">Ember</div>
           </div>
-          <div class="tp-item" id="tp-midnight" onclick="setTheme('midnight')">
+          <div class="tp-item" id="tp-midnight" onclick="setPreferredTheme('midnight','dark')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#080e1a 50%,#38bfff 50%)"></div>
             <div class="tp-label">Midnght</div>
           </div>
-          <div class="tp-item" id="tp-neon" onclick="setTheme('neon')">
+          <div class="tp-item" id="tp-neon" onclick="setPreferredTheme('neon','dark')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#0d0d0d 50%,#ff2d78 50%)"></div>
             <div class="tp-label">Neon</div>
           </div>
         </div>
-        <div class="theme-picker-section">☀️ Light</div>
+        <div class="theme-picker-section">☀️ Light Theme</div>
         <div class="theme-picker-grid">
-          <div class="tp-item" id="tp-chalk" onclick="setTheme('chalk')">
+          <div class="tp-item" id="tp-chalk" onclick="setPreferredTheme('chalk','light')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#f7f7f5 50%,#1a1a1a 50%)"></div>
             <div class="tp-label">Chalk</div>
           </div>
-          <div class="tp-item" id="tp-blossom" onclick="setTheme('blossom')">
+          <div class="tp-item" id="tp-blossom" onclick="setPreferredTheme('blossom','light')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#fff5f7 50%,#e8406a 50%)"></div>
             <div class="tp-label">Blossom</div>
           </div>
-          <div class="tp-item" id="tp-sage" onclick="setTheme('sage')">
+          <div class="tp-item" id="tp-sage" onclick="setPreferredTheme('sage','light')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#f4f7f2 50%,#3a7d44 50%)"></div>
             <div class="tp-label">Sage</div>
           </div>
-          <div class="tp-item" id="tp-arctic" onclick="setTheme('arctic')">
+          <div class="tp-item" id="tp-arctic" onclick="setPreferredTheme('arctic','light')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#f0f5fb 50%,#1a6bbf 50%)"></div>
             <div class="tp-label">Arctic</div>
           </div>
-          <div class="tp-item" id="tp-dusk" onclick="setTheme('dusk')">
+          <div class="tp-item" id="tp-dusk" onclick="setPreferredTheme('dusk','light')">
             <div class="tp-swatch" style="background:linear-gradient(135deg,#f5f3ff 50%,#6c3fc4 50%)"></div>
             <div class="tp-label">Dusk</div>
           </div>
         </div>
+        <div style="font-size:0.65em;color:var(--muted);text-align:center;padding-top:6px;" id="auto-mode-hint">Tap a theme to set preference for that mode</div>
       </div>
     
   </div>
@@ -1042,31 +1050,90 @@ const THEME_META = {
   dusk:     { label:'Dusk',     bg:'#f5f3ff', swatch:'linear-gradient(135deg,#f5f3ff 50%,#6c3fc4 50%)' },
 };
 
+const DARK_THEMES  = ['volt','nebula','ember','midnight','neon'];
+const LIGHT_THEMES = ['chalk','blossom','sage','arctic','dusk'];
+
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('sc_theme', t);
-  // Update picker button
   const meta = THEME_META[t] || THEME_META.volt;
   const label = document.getElementById('theme-picker-label');
   if (label) label.textContent = meta.label;
-  // Update active state in dropdown
   document.querySelectorAll('.tp-item').forEach(el => el.classList.remove('active'));
   const active = document.getElementById('tp-'+t);
   if (active) active.classList.add('active');
-  // Update PWA theme-color meta
-  const colorMeta = document.getElementById('theme-color-meta');
-  if (colorMeta) colorMeta.content = meta.bg;
-  // Force Android status bar update — remove and re-add meta tag
+  // Force status bar colour
   const existingMeta = document.querySelector('meta[name="theme-color"]');
   if (existingMeta) existingMeta.remove();
   const newMeta = document.createElement('meta');
-  newMeta.name = 'theme-color';
-  newMeta.id = 'theme-color-meta';
+  newMeta.name = 'theme-color'; newMeta.id = 'theme-color-meta';
   newMeta.content = meta.bg;
   document.head.appendChild(newMeta);
-  // Close picker
   const dd = document.getElementById('theme-dropdown');
   if (dd) dd.classList.remove('open');
+  updateAutoToggleUI();
+}
+
+function setPreferredTheme(t, mode) {
+  // Save as preferred for this mode
+  localStorage.setItem('sc_theme_' + mode, t);
+  // If auto mode is on, apply immediately
+  if (localStorage.getItem('sc_auto_theme') === '1') {
+    setTheme(t);
+    showToast((mode === 'dark' ? '🌙' : '☀️') + ' ' + (THEME_META[t]?.label || t) + ' set as ' + mode + ' theme');
+  } else {
+    // Auto off — just apply it directly
+    setTheme(t);
+  }
+}
+
+function toggleAutoMode() {
+  const isOn = localStorage.getItem('sc_auto_theme') === '1';
+  const newVal = isOn ? '0' : '1';
+  localStorage.setItem('sc_auto_theme', newVal);
+  if (newVal === '1') {
+    applySystemTheme();
+    showToast('🔄 Auto mode on — follows system dark/light');
+  } else {
+    showToast('🎨 Manual mode — pick any theme');
+  }
+  updateAutoToggleUI();
+}
+
+function updateAutoToggleUI() {
+  const isOn = localStorage.getItem('sc_auto_theme') === '1';
+  const toggle = document.getElementById('auto-toggle');
+  const knob   = document.getElementById('auto-toggle-knob');
+  const hint   = document.getElementById('auto-mode-hint');
+  if (toggle) toggle.style.background = isOn ? 'var(--accent)' : 'var(--surface2)';
+  if (knob)   { knob.style.left = isOn ? '20px' : '2px'; knob.style.background = isOn ? '#fff' : 'var(--muted)'; }
+  if (hint)   hint.textContent = isOn ? 'Tap a theme to set preference for that mode' : 'Tap any theme to apply it directly';
+  // Highlight preferred themes
+  const prefDark  = localStorage.getItem('sc_theme_dark')  || 'volt';
+  const prefLight = localStorage.getItem('sc_theme_light') || 'dusk';
+  document.querySelectorAll('.tp-item').forEach(el => el.classList.remove('active','preferred'));
+  const curTheme = document.documentElement.getAttribute('data-theme');
+  const curEl = document.getElementById('tp-'+curTheme);
+  if (curEl) curEl.classList.add('active');
+  if (isOn) {
+    const darkEl  = document.getElementById('tp-'+prefDark);
+    const lightEl = document.getElementById('tp-'+prefLight);
+    if (darkEl && darkEl !== curEl)  darkEl.style.outline  = '2px solid var(--accent)';
+    if (lightEl && lightEl !== curEl) lightEl.style.outline = '2px solid var(--accent)';
+    // Clear outlines on non-preferred
+    document.querySelectorAll('.tp-item').forEach(el => {
+      if (el !== darkEl && el !== lightEl) el.style.outline = '';
+    });
+  } else {
+    document.querySelectorAll('.tp-item').forEach(el => el.style.outline = '');
+  }
+}
+
+function applySystemTheme() {
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const prefDark  = localStorage.getItem('sc_theme_dark')  || 'volt';
+  const prefLight = localStorage.getItem('sc_theme_light') || 'dusk';
+  setTheme(isDark ? prefDark : prefLight);
 }
 
 function toggleThemePicker() {
@@ -1102,10 +1169,20 @@ function adjustFont(delta) {
   setFontSize(current + delta);
 }
 function loadPrefs() {
-  const t = localStorage.getItem('sc_theme') || 'volt';
   const s = parseFloat(localStorage.getItem('sc_fontsize') || '1');
-  setTheme(t);
   setFontSize(s);
+  // Apply theme
+  if (localStorage.getItem('sc_auto_theme') === '1') {
+    applySystemTheme();
+  } else {
+    const t = localStorage.getItem('sc_theme') || 'volt';
+    setTheme(t);
+  }
+  updateAutoToggleUI();
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (localStorage.getItem('sc_auto_theme') === '1') applySystemTheme();
+  });
   if (window.innerWidth > 768 && localStorage.getItem('sc_sidebar_collapsed') === 'true') {
     document.body.classList.add('sidebar-collapsed');
   }
