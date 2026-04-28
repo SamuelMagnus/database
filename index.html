@@ -523,6 +523,7 @@
 
   #bottom-nav span[style*="font-size:1.6em"] { font-size:1.6em !important; }
   .bottom-nav { display:flex; position:fixed; bottom:0; left:0; right:0; background:rgba(var(--surface-rgb,17,17,24),0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid var(--border); z-index:150; padding:0; padding-bottom:env(safe-area-inset-bottom); font-size:15px; }
+  .bottom-nav::after { content:""; position:absolute; bottom:calc(-1 * env(safe-area-inset-bottom)); left:0; right:0; height:env(safe-area-inset-bottom); background:var(--bg); }
   .bn-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 4px 8px; cursor:pointer; font-size:0.62em; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; gap:3px; border:none; background:none; font-family:'Inter',sans-serif; transition:color 0.15s; }
   .bn-item .bn-icon { font-size:1.6em; line-height:1; }
   .bn-item.active { color:var(--accent); }
@@ -953,7 +954,7 @@
 </div>
 
 <!-- BOTTOM NAV (mobile) -->
-<nav id="bottom-nav" style="display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:99999;padding:0;padding-bottom:env(safe-area-inset-bottom);">
+<nav id="bottom-nav" style="display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:99999;padding:0;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 env(safe-area-inset-bottom) 0 0 var(--surface);">
   <button onclick="bottomNav('dashboard')" id="bn-dashboard" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;font-size:0.62em;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.04em;gap:3px;border:none;background:none;font-family:'Inter',sans-serif;">
     <span style="font-size:2em;line-height:1">📊</span>Dashboard
   </button>
