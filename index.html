@@ -95,7 +95,7 @@
   html { font-size:15px; }
   body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.2s,color 0.2s; line-height:1.5; font-size:calc(1rem * var(--font-scale)); }
 
-  header { display:flex; align-items:center; justify-content:space-between; padding:0.7em 0.8em; padding-top:calc(0.7em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:rgba(var(--surface-rgb,17,17,24),0.82); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); position:sticky; top:0; z-index:90; gap:6px; flex-wrap:nowrap; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:0.7em 0.8em; padding-top:calc(0.7em + env(safe-area-inset-top)); border-bottom:1px solid var(--border); background:rgba(var(--surface-rgb,17,17,24),0.82); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); position:sticky; top:0; z-index:90; gap:6px; flex-wrap:nowrap; box-shadow:0 1px 12px rgba(0,0,0,0.12); }
   .logo { font-size:0.87em; font-weight:800; letter-spacing:-0.02em; white-space:nowrap; font-family:'Syne',sans-serif; flex-shrink:0; padding:8px 0; line-height:1; }
 
   .header-stats { display:flex; gap:1.4em; font-family:'Inter',sans-serif; font-size:0.78em; color:var(--muted); }
@@ -219,6 +219,7 @@
 
   /* Larger price on card */
   .card-price-big { font-family:'Nunito',sans-serif; font-size:1.35em; font-weight:900; color:var(--accent); line-height:1; }
+  .grad-divider { height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); margin:10px 0; opacity:0.3; }
 
   /* Greeting */
   .greeting-bar { padding:18px 16px 16px; text-align:center; }
@@ -481,6 +482,16 @@
   .is-tile-price { font-family:'Nunito',sans-serif; font-size:1.25em; font-weight:900; color:var(--accent); line-height:1; }
   .is-tile-sub { font-size:0.62em; color:var(--muted); margin-top:2px; }
   .is-tile-profit { font-size:0.66em; font-weight:700; color:var(--success); margin-top:4px; font-family:'DM Mono',monospace; }
+
+  [data-theme="chalk"] header,
+  [data-theme="blossom"] header,
+  [data-theme="sage"] header,
+  [data-theme="arctic"] header,
+  [data-theme="dusk"] header { background:rgba(255,255,255,0.92); border-bottom:1px solid var(--border); box-shadow:0 2px 16px rgba(0,0,0,0.1); }
+
+  /* Add button text — white on dark accent (chalk), dark on light accent */
+  [data-theme="chalk"] header button[onclick*="openAddModal"] { color:#fff !important; }
+  [data-theme="chalk"] .avatar-btn { color:#fff !important; }
   /* theme picker is fixed/centered — no mobile override needed */
   ::-webkit-scrollbar-track{background:var(--bg);}
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
@@ -1355,11 +1366,13 @@ function renderMobileCards(items) {
           <div style="font-size:0.65em;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;">per item${costPer>0&&pricePer>0?` · <span style="color:var(--success)">+£${(pricePer-costPer).toFixed(2)} margin</span>`:''}</div>
         </div>
       </div>
+      <div class="grad-divider"></div>
       <div class="m-card-row"><span class="m-card-key">Qty in stock</span><span class="m-card-val" style="color:${qtyColor}">${qtyLeft}${totalSoldQty>0?` <span style="color:var(--muted);font-size:0.85em">(${totalSoldQty} sold)</span>`:''}</span></div>
       <div class="m-card-row"><span class="m-card-key">Cost per item</span><span class="m-card-val" style="color:var(--muted)">${costPer>0?'£'+costPer.toFixed(2):'—'}</span></div>
       <div class="m-card-row"><span class="m-card-key">Total stock value</span><span class="m-card-val" style="color:var(--accent)">${pricePer>0&&qtyLeft>0?'£'+(pricePer*qtyLeft).toFixed(2):'—'}</span></div>
       ${sales.length>0?`<div class="m-card-row"><span class="m-card-key">Revenue so far</span><span class="m-card-val" style="color:var(--success)">${fmt(totalRevenue)} · +£${totalProfit.toFixed(2)} profit</span></div>`:''}
       ${priceSuggest}
+      <div class="grad-divider"></div>
       <div class="m-card-actions">
         <button class="btn btn-ghost btn-sm" onclick="viewItem('${item.id}')">👁 View</button>
         <button class="btn btn-ghost btn-sm" onclick="editItem('${item.id}')">✏️ Edit</button>
