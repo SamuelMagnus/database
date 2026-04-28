@@ -4,7 +4,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0f0f0f" id="theme-color-meta">
+<meta name="theme-color" content="#f5f3ff" id="theme-color-meta">
+<script>
+  // Force status bar colour immediately before page renders
+  (function() {
+    const t = localStorage.getItem('sc_theme') || 'volt';
+    const bgs = { volt:'#0f0f12', nebula:'#0d0d1a', ember:'#120a00', midnight:'#000010', neon:'#000d00', chalk:'#f7f7f5', blossom:'#fff0f5', sage:'#f0f5f0', arctic:'#f0f8ff', dusk:'#f5f3ff' };
+    const bg = bgs[t] || '#0f0f12';
+    let m = document.getElementById('theme-color-meta');
+    if (!m) { m = document.createElement('meta'); m.name='theme-color'; m.id='theme-color-meta'; document.head.appendChild(m); }
+    m.content = bg;
+  })();
+</script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1044,6 +1055,14 @@ function setTheme(t) {
   // Update PWA theme-color meta
   const colorMeta = document.getElementById('theme-color-meta');
   if (colorMeta) colorMeta.content = meta.bg;
+  // Force Android status bar update — remove and re-add meta tag
+  const existingMeta = document.querySelector('meta[name="theme-color"]');
+  if (existingMeta) existingMeta.remove();
+  const newMeta = document.createElement('meta');
+  newMeta.name = 'theme-color';
+  newMeta.id = 'theme-color-meta';
+  newMeta.content = meta.bg;
+  document.head.appendChild(newMeta);
   // Close picker
   const dd = document.getElementById('theme-dropdown');
   if (dd) dd.classList.remove('open');
