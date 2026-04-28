@@ -683,10 +683,10 @@
   <div class="action-sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
     <div class="sheet-item-name" id="sheet-item-name">Item</div>
-    <div class="sheet-row" onclick="closeActionSheet();viewItem(currentSheetId)"><span class="si">👁</span> View details</div>
-    <div class="sheet-row" onclick="closeActionSheet();editItem(currentSheetId)"><span class="si">✏️</span> Edit item</div>
-    <div class="sheet-row" onclick="closeActionSheet();openSellModal(currentSheetId)"><span class="si">🏷</span> Record a sale</div>
-    <div class="sheet-row sheet-danger" onclick="closeActionSheet();confirmDelete(currentSheetId)"><span class="si">🗑</span> Delete item</div>
+    <div class="sheet-row" onclick="const id=currentSheetId;closeActionSheet();viewItem(id)"><span class="si">👁</span> View details</div>
+    <div class="sheet-row" onclick="const id=currentSheetId;closeActionSheet();editItem(id)"><span class="si">✏️</span> Edit item</div>
+    <div class="sheet-row" onclick="const id=currentSheetId;closeActionSheet();openSellModal(id)"><span class="si">🏷</span> Record a sale</div>
+    <div class="sheet-row sheet-danger" onclick="const id=currentSheetId;closeActionSheet();confirmDelete(id)"><span class="si">🗑</span> Delete item</div>
   </div>
 </div>
 
